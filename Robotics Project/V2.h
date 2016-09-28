@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+using namespace std;
 class V2 {
 public:
 	V2();
@@ -12,7 +14,7 @@ public:
 	V2 operator+(V2 other);
 	V2 operator-(V2 other);
 
-	void Print();
+	string ToString();
 private:
 	int x;
 	int y;

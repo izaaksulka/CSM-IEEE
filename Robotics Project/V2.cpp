@@ -31,3 +31,7 @@ V2 V2::operator+(V2 other) {
 V2 V2::operator-(V2 other) {
 	return V2(x - other.GetX(), y - other.GetY());
 }
+
+string V2::ToString() {
+	return "(" + to_string(x) + ", " + to_string(y) + ")";
+}
