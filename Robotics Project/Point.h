@@ -1,18 +1,18 @@
 #pragma once
 #include <string>
 using namespace std;
-class V2 {
+class Point {
 public:
-	V2();
-	V2(int newX, int newY);
+	Point();
+	Point(int newX, int newY);
 
 	int GetX();
 	int GetY();
 	void SetX(int newX);
 	void SetY(int newY);
 
-	V2 operator+(V2 other);
-	V2 operator-(V2 other);
+	Point operator+(Point other);
+	Point operator-(Point other);
 
 	string ToString();
 private:
