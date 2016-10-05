@@ -111,9 +111,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Maze.cpp" />
     <ClCompile Include="V2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Maze.h" />
     <ClInclude Include="V2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
