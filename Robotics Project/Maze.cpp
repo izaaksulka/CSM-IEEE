@@ -6,3 +6,8 @@ Implementation for the Maze class, which stores data about the maze and has func
 
 **********************************/
 #include "maze.h"
+
+Maze::Maze() {
+    //Do whatever needs to be done in this initialization
+    cout << "Fix me" << endl;
+}

@@ -6,9 +6,12 @@ Declaration of Maze which stores data about the maze and has functions that work
 
 **********************************/
 #pragma once
+#include <iostream>
+#include <string>
+using namespace std;
 class Maze{
 public:
-
+    Maze();
 
 
 private:
