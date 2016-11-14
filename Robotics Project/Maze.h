@@ -18,7 +18,8 @@ public:
     Maze();
     //Returns a list of Points that refer to locations in the maze that the robot should progress through to get somewhere
     vector<Point> GetPath(Point start, Point end);
-
+	//Lets us see what the program thinks the maze looks like
+	void Print(ostream& out);
 private:
 	int height;
 	int width;

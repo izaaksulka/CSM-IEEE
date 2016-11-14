@@ -11,6 +11,7 @@ Maze::Maze() {
     //Do whatever needs to be done in this initialization
 	height = 7;
 	width = 7;
+	//Set up the Tile array
 	map = new Tile*[width];
 	for (int i = 0; i < width; i++) {
 		map[i] = new Tile[height];
@@ -19,4 +20,13 @@ Maze::Maze() {
 		}
 	}
 	cout << "Finished Maze() constructor   <-- why does this happen twice??" << endl;
+}
+
+void Maze::Print(ostream& out) {
+	for (int i = 0; i < width; i++) {
+		for (int ii = 0; ii < height; ii++) {
+			map[i][ii].Print(out);
+		}
+		out << endl;
+	}
 }

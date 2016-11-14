@@ -9,3 +9,7 @@ Tile::Tile(int nx, int ny) {
 	type = 0;
 	position = Point(nx, ny);
 }
+
+void Tile::Print(ostream& out) {
+	out << "[ " << type << " ]";
+}
