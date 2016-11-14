@@ -3,7 +3,8 @@
 
 class Tile {
 public:
-
+	Tile();
+	Tile(int, int);
 
 private:
 

@@ -3,6 +3,7 @@
 Author: Izaak Sulka
 
 Declaration of Maze which stores data about the maze and has functions that work with it like "GetPath(from, to)"
+I think this class will also do the navigation, like telling the motor controller module where to go.
 
 **********************************/
 #pragma once
@@ -10,6 +11,7 @@ Declaration of Maze which stores data about the maze and has functions that work
 #include <string>
 #include <vector>
 #include "Point.h"
+#include "Tile.h"
 using namespace std;
 class Maze{
 public:
@@ -18,7 +20,8 @@ public:
     vector<Point> GetPath(Point start, Point end);
 
 private:
-
-    vector<vector<Tile>> maze;
+	int height;
+	int width;
+	Tile** map;
 
 };
