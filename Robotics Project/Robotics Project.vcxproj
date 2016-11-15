@@ -113,19 +113,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BSensor.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Maze.cpp" />
     <ClCompile Include="MotorControl.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Point.cpp" />
+    <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BSensor.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Maze.h" />
     <ClInclude Include="MotorControl.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -17,3 +17,8 @@ void MotorControl::Rotate(double angle) {
 	//I don't know how to do motors yet but that goes here
 
 }
+
+void MotorControl::CancelAll() {
+	cout << "MotorControl::CancelAll() not implemented." << endl;
+
+}

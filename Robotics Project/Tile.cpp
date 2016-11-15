@@ -3,6 +3,7 @@
 
 Tile::Tile() {
 	type = 0;
+	position = Point(0, 0);
 }
 
 Tile::Tile(int nx, int ny) {
@@ -12,4 +13,8 @@ Tile::Tile(int nx, int ny) {
 
 void Tile::Print(ostream& out) {
 	out << "[ " << type << " ]";
+}
+
+void Tile::SetType(int newType) {
+	type = newType;
 }
