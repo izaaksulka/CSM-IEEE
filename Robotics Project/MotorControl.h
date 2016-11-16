@@ -21,7 +21,8 @@ public:
 
 
 private:
-
+	//How exactly movement is calculated may change
+	double wheelCircumference;
 
 
 

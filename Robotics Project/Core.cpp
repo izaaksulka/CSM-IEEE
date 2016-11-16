@@ -9,6 +9,7 @@ Implementation for the Core class
 Core::Core(){
 	nav = Maze();
 	motorControl = MotorControl();
+	moveFeedback = MovementFeedback(&motorControl);
 }
 
 

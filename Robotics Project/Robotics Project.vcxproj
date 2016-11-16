@@ -118,6 +118,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Maze.cpp" />
     <ClCompile Include="MotorControl.cpp" />
+    <ClCompile Include="MovementFeedback.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -127,6 +128,7 @@
     <ClInclude Include="Core.h" />
     <ClInclude Include="Maze.h" />
     <ClInclude Include="MotorControl.h" />
+    <ClInclude Include="MovementFeedback.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Vector2.h" />

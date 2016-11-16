@@ -8,7 +8,7 @@ it to make it recheck it's state and decide if something new needs to happen
 #pragma once
 #include "MotorControl.h"
 #include "Maze.h"
-
+#include "MovementFeedback.h"
 using namespace std;
 
 
@@ -22,5 +22,5 @@ public:
 private:
 	Maze nav;
 	MotorControl motorControl;
-
+	MovementFeedback moveFeedback;
 };
