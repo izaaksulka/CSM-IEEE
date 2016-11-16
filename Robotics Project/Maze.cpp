@@ -21,8 +21,11 @@ Maze::Maze() {
 		map[i] = new Tile[height];
 		for (int ii = 0; ii < height; ii++) {
 			map[i][ii] = Tile(i, ii);
+            //(map[i][ii]) = new Tile(i, ii);
+            //Tile i = (map[i][ii]);
 			map[i][ii].SetType(k);  //This line is just for testing if the array is being stored correctly
 			k++;
+            cout << k << endl;
 		}
 	}
 	cout << "Finished Maze() constructor   <-- why does this happen twice??" << endl;
@@ -36,12 +39,14 @@ Maze::~Maze() {
 }
 
 void Maze::Print(ostream& out) {
+    cout << "--------------------------------------------------------" << endl;
 	for (int ii = 0; ii < height; ii++) {
 		for (int i = 0; i < width; i++) {
 			map[i][ii].Print(out);
 		}
 		out << endl;
 	}
+    cout << "--------------------------------------------------------" << endl;
 }
 
 

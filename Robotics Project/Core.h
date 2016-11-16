@@ -9,6 +9,7 @@ it to make it recheck it's state and decide if something new needs to happen
 #include "MotorControl.h"
 #include "Maze.h"
 #include "MovementFeedback.h"
+#include <ctime>
 using namespace std;
 
 
@@ -20,6 +21,8 @@ public:
 
 
 private:
+    clock_t printDelay;
+    clock_t printAt;
 	Maze nav;
 	MotorControl motorControl;
 	MovementFeedback moveFeedback;

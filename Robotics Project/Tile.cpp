@@ -7,6 +7,7 @@ Tile::Tile() {
 }
 
 Tile::Tile(int nx, int ny) {
+    cout << "Tile constructor i = " << nx << "  ii = " << ny << endl;
 	type = 0;
 	position = Point(nx, ny);
 }
