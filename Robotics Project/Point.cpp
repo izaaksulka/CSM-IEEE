@@ -35,3 +35,7 @@ Point Point::operator-(Point other) {
 string Point::ToString() {
 	return "(" + to_string(x) + ", " + to_string(y) + ")";
 }
+
+void Point::Print() {
+    cout << ToString();
+}

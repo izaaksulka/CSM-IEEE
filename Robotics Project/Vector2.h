@@ -21,6 +21,7 @@ public:
 	void operator+=(Vector2 other);
 	void operator-=(Vector2 other);
 	void operator*=(double other);
+    double Dot(const Vector2 &other);
 private:
 
 };

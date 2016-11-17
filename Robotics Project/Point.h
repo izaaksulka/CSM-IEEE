@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <iostream>
 using namespace std;
 class Point {
 public:
@@ -15,6 +16,7 @@ public:
 	Point operator-(Point other);
 
 	string ToString();
+    void Print();
 private:
 	int x;
 	int y;

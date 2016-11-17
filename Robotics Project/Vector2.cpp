@@ -32,3 +32,6 @@ void Vector2::operator-=(Vector2 other) {
 void Vector2::operator*=(double other) {
 	x *= other;      y *= other;
 }
+double Vector2::Dot(const Vector2 &other) {
+    return x * other.x + y * other.y;
+}
