@@ -39,3 +39,7 @@ string Point::ToString() {
 void Point::Print() {
     cout << ToString();
 }
+
+//ostream operator<<(ostream ost, Point self) {
+//    ost << self.ToString();
+//}

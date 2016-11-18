@@ -17,8 +17,12 @@ public:
 
 	string ToString();
     void Print();
+
+
 private:
 	int x;
 	int y;
 
 };
+
+void operator<<(ostream ost, Point self);

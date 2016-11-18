@@ -10,7 +10,7 @@ Implementation for the Maze class, which stores data about the maze and has func
 Maze::Maze() {
     //Do whatever needs to be done in this initialization
 	height = 7;
-	width = 3;
+	width = 7;
 	tileHeight = 1.0;
 	tileWidth = 1.0;
 	position = Vector2(0.5, height * tileHeight - tileHeight / 2.0);
@@ -27,7 +27,7 @@ Maze::Maze() {
 			//k++;
 		}
 	}
-    cout << "Printing at end of constructor:" << endl;
+    //cout << "Printing at end of constructor:" << endl;
     Print(cout);
 }
 
@@ -55,24 +55,27 @@ Point Maze::CurrentTilePoint() {
 	return Point(position.x / tileWidth, position.y / tileHeight);
 }
 
+
+
 Tile* Maze::CurrentTile() {
 	Point cp = CurrentTilePoint();
 	return map[cp.GetY(), cp.GetX()];
 }
 
 void Maze::Update(const MovementData &movementData, MotorControl* motorControl) {
-    cout << "MovementData : distance = " << movementData.movement << "    rotation = " << movementData.rotation << endl;;
+    //cout << "MovementData : distance = " << movementData.movement << "    rotation = " << movementData.rotation << endl;;
     switch (actionType) {
     case ActionTypes::none:
-        cout << "In \"none\" mode of update switch" << endl;
+        //cout << "In \"none\" mode of update switch" << endl;
         //If the robot's not doing anything, figure out what to do and do it
         Solve(motorControl);
         break;
     case ActionTypes::move:
-        cout << "In move mode of Update switch" << endl;
+        //cout << "In move mode of Update switch" << endl;
         position += FacingVector() * movementData.movement;
         //For now im just setting places i've been to 1 so i can see that i've been there
         CurrentTile()->SetType(1);
+        //cout << CurrentTilePoint().ToString() << endl;
         //To check if the robot just moved past its destination, we can use a dot product between the direction its facing and the direction to where it wants to go.
         //Note that this is only checking if we go past the point by driving in the direction the robot is traveling
         if (FacingVector().Dot(targetPosition - position) <= 0) {
@@ -95,7 +98,7 @@ Vector2 Maze::FacingVector() {
 }
 
 void Maze::Solve(MotorControl* motorControl) {
-    StartForwardMotors(motorControl, Vector2(0, 10));
+    StartForwardMotors(motorControl, Vector2(5, 0));
 }
 
 void Maze::MoveTo(MotorControl* motorControl) {

@@ -24,8 +24,10 @@ MovementData MovementFeedback::Report() {
 
 
     ////////
-    clock_t elapsedTime
-	return MovementData(mc->forwardMotorSpeed, mc->rotatingSpeed);
+    clock_t elapsedTime = clock() - lastReport;
+    lastReport += elapsedTime;
+    double elapsedSeconds = elapsedTime / 1000.0;
+	return MovementData(mc->forwardMotorSpeed * elapsedSeconds, mc->rotatingSpeed * elapsedSeconds);
 }
 
 
