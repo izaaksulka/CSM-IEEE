@@ -38,13 +38,13 @@ class Drive:
 
     def UpdateSpeeds(self):
         # Do da math
-	rearOut = ( self.bodyVel.inner( self.rearDir ) + self.b * self.bodyRot ) / self.wheelR
-	frontROut = ( self.bodyVel.inner( self.frontRDir ) + self.b * self.bodyRot ) / self.wheelR
-	frontLOut = ( self.bodyVel.inner( self.frontLDir ) + self.b * self.bodyRot ) / self.wheelR
+    	rearOut = ( self.bodyVel.inner( self.rearDir ) + self.b * self.bodyRot ) / self.wheelR
+    	frontROut = ( self.bodyVel.inner( self.frontRDir ) + self.b * self.bodyRot ) / self.wheelR
+    	frontLOut = ( self.bodyVel.inner( self.frontLDir ) + self.b * self.bodyRot ) / self.wheelR
 
         self.motors[0].setSpeed( rearOut )
         self.motors[1].setSpeed( frontROut )
-	self.motors[2].setSpeed( frontLOut )
+        self.motors[2].setSpeed( frontLOut )
 
 
 
