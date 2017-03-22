@@ -21,12 +21,15 @@ print("Start");
 
 #Initialize ACDetectorReader
 reader = ACDetectorReader.ACDetectorReader(acDetectorPort);
+
 #initialize Drive
 drive = Drive.Drive();
+
 #Initialize navigation
 startPosition = Vector.Vector(0.5, 6.4999);#measured in feet
 startRotation = 0.0;
 nav = Navigation.Navigation(startPosition, startRotation, drive);
+
 #Initialize MovementFeedback
 movementFeedback = MovementFeedback.MovementFeedback(drive);
 #drive.SetMotors(Transform.Transform(Vector.Vector(0.0, 0.0), 050.0));
