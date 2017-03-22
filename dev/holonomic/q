@@ -1,0 +1,89 @@
+
+from math import sqrt
+from Vector import Vector
+from curses import *
+import RPi.GPIO as GPIO
+#import getch
+import time
+# The radius of the drive wheels
+wheelR = 1 
+
+# The unit direction vectors of the wheels
+F0 = Vector( -1, 0 ) 
+F1 = Vector( 0.5, -sqrt(3)/2 ) 
+F2 = Vector( 0.5, sqrt(3)/2 ) 
+
+# Wheel baseline (distance from the center of the chassis to the wheel)
+b = 1 
+
+# How we want the body to move
+bodyRot = 0 
+bodyVel = Vector( 0, 1 ) 
+
+ROT_SPEED = 10 
+LIN_SPEED = 255 
+
+class holoMotor:
+
+	# Normal class variables
+	# ... python's weird	
+	# pwmPort
+	# dirPort
+	# motorPWM
+
+	def __init__( self, E, M ):
+		self.pwmPort = E
+		self.dirPort = M
+		
+		GPIO.setup( self.pwmPort, GPIO.OUT )
+		GPIO.setup( self.dirPort, GPIO.OUT )
+	
+		self.motorPWM = GPIO.PWM( self.pwmPort, 50 )
+	
+	def setSpeed( self, speed ): 
+		
+		print( abs( speed ) )	
+		if( speed > 0 ):
+			self.motorPWM.ChangeDutyCycle( abs( speed ) )
+			GPIO.output( self.dirPort, GPIO.LOW )
+			self.motorPWM.start(1)
+		elif( speed < 0 ):			
+			self.motorPWM.ChangeDutyCycle( abs( speed ) )
+			GPIO.output( self.dirPort, GPIO.HIGH )
+			self.motorPWM.start(1)
+		else:
+			self.motorPWM.stop()
+
+GPIO.setmode( GPIO.BOARD )
+
+motors = [ holoMotor(12, 11), holoMotor(32, 31), holoMotor(33, 36) ]
+
+try	:
+	while 1:
+		for dc in range( -99, 99, 5 ):
+			for motor in motors:
+				motor.setSpeed(dc);
+			time.sleep( 0.5 ) 
+except KeyboardInterrupt:
+	pass 
+
+GPIO.cleanup()
+		
+
+'''
+while True:
+	
+	# TODO: Write driver control code here
+	
+	
+	# Do da math
+	w0 = ( bodyVel.inner( F0 ) + b * bodyRot ) / wheelR 	
+	w1 = ( bodyVel.inner( F1 ) + b * bodyRot ) / wheelR 
+	w2 = ( bodyVel.inner( F2 ) + b * bodyRot ) / wheelR 
+
+	# TODO: Replace with motor output	
+	# print( w0, w1, w2 ) 
+
+	#inputs = getch() 
+	#print( inputs ) 
+''
