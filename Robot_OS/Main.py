@@ -23,7 +23,7 @@ print("Start");
 reader = ACDetectorReader.ACDetectorReader(acDetectorPort);
 
 #initialize Drive
-drive = Drive.Drive("/dev/ttyACM1");
+drive = Drive.Drive("/dev/ttyACM0");
 
 #Initialize navigation
 startPosition = Vector.Vector(0.5, 6.4999);#measured in feet

@@ -1,10 +1,9 @@
 from math import sqrt
 from Vector import Vector
-import holoMotor as HM
 import time
 import serial
 
-        
+DRIVE_SCALE = 2.54 
 class Drive:
     def __init__(self, comPort):
         # The radius of the drive wheels
@@ -26,7 +25,7 @@ class Drive:
         # Just wait for the serial to connect,
         # That is, wait until we see something in the input buffer
         while self.ser.inWaiting() == initBit:
-            print( ".", end = '' ) # Literally here to do nothing
+            print( "", end = '' ) # Literally here to do nothing
         
         
         # How we want the body to move
@@ -36,8 +35,8 @@ class Drive:
     def SetMotors(self, newMotionTransform):
         #here needs to get the transform from the nav.
         
-        self.bodyVel = newMotionTransform.position;
-        self.bodyRot = newMotionTransform.rotation;
+        self.bodyVel = newMotionTransform.position * DRIVE_SCALE;
+        self.bodyRot = newMotionTransform.rotation * DRIVE_SCALE;
 
         # Do da math 
         rearOut = ( self.bodyVel.inner( self.rearDir ) + self.b * self.bodyRot ) / self.wheelR
