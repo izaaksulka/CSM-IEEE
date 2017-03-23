@@ -38,13 +38,11 @@ class Drive:
         
         self.bodyVel = newMotionTransform.position;
         self.bodyRot = newMotionTransform.rotation;
-        self.UpdateSpeeds();
 
         # Do da math 
         rearOut = ( self.bodyVel.inner( self.rearDir ) + self.b * self.bodyRot ) / self.wheelR
         frontROut = ( self.bodyVel.inner( self.frontRDir ) + self.b * self.bodyRot ) / self.wheelR
         frontLOut = ( self.bodyVel.inner( self.frontLDir ) + self.b * self.bodyRot ) / self.wheelR
-        #print("asfdasfdasfdasfdasfdasfdasfd" + str(int(round(rearOut))));
         output = "1 %d %d %d\n" % (int(round(rearOut)), int(round(frontLOut)), int(round(frontROut)));
         print("output = " + output);
         self.ser.write( output.encode( encoding = "ascii" ) );
