@@ -1,12 +1,12 @@
 //Declare pin functions on Arduino
 
-#define REAR_E 10
-#define FRONT_RIGHT_E 11
-#define FRONT_LEFT_E 9
+#define REAR_E 11
+#define FRONT_RIGHT_E 9
+#define FRONT_LEFT_E 10
 
-#define REAR_M 12
-#define FRONT_RIGHT_M 13
-#define FRONT_LEFT_M 8
+#define REAR_M 13
+#define FRONT_RIGHT_M 8
+#define FRONT_LEFT_M 12
 
 #define stp 2
 #define dir 3
