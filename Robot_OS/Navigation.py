@@ -124,4 +124,7 @@ class Navigation:
     def SendNewMovement(self):
         print("SendNewMovementTransform");
         self.driver.SetMotors(self.currentMovement);
-        
+    def StopAllMotors(self):
+        self.currentMovement.position = Vector.Vector( 0, 0 );
+        self.currentMovement.rotation = 0
+        self.SendNewMovement();

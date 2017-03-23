@@ -44,7 +44,7 @@ while(1):
 
     #print(str(reader.GetSensorValue()));
 
-
+nav.StopAllMotors()
 GPIO.cleanup();
 
 print("Called Update() " + str(reader.updateCounter) + " times in " + str(duration) + " seconds.")
