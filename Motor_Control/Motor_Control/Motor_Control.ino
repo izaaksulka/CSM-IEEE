@@ -1,6 +1,25 @@
-const int REAR_E = 9, FRONT_RIGHT_E = 10, FRONT_LEFT_E = 11;
-const int REAR_M = 8, FRONT_RIGHT_M = 12, FRONT_LEFT_M = 13;
- 
+//Declare pin functions on Arduino
+
+#define REAR_E 9
+#define FRONT_RIGHT_E 10
+#define FRONT_LEFT_E 11
+
+#define REAR_M 8
+#define FRONT_RIGHT_M 12
+#define FRONT_LEFT_M 13
+
+#define stp 2
+#define dir 3
+#define MS1 4
+#define MS2 5
+#define MS3 6
+#define EN  7
+
+//Declare variables for functions
+int motorType;
+int state;
+enum motorType = {STEPPER, HOLONMIC}
+
 void setup() 
 { 
   pinMode(REAR_E, OUTPUT);
@@ -12,51 +31,65 @@ void setup()
   pinMode(FRONT_LEFT_E, OUTPUT);
   pinMode(FRONT_LEFT_M, OUTPUT);
 
-  
+  pinMode(stp, OUTPUT);
+  pinMode(dir, OUTPUT);
+  pinMode(MS1, OUTPUT);
+  pinMode(MS2, OUTPUT);
+  pinMode(MS3, OUTPUT);
+  pinMode(EN, OUTPUT);
+  resetBEDPins(); //Set step, direction, microstep and enable pins to default states
+
   Serial.begin(9600);
-  while (! Serial);
-  Serial.println("Speed 0 to 255");
+
 } 
  
 
 void loop() {
 
   
-  if (Serial.available() > 0) {
+    if (Serial.available() > 0) {
 
-    // Tells the program which set of motors to set
-    int motorSet = Serial.parseInt();
-    
-    int forwardV = Serial.parseInt();
-    int sidewaysV = Serial.parseInt();
-    int rotationalV = Serial.parseInt();
-    
-    int speedRear = Serial.parseInt();
+        motorType = Serial.parseInt();
 
-    // TODO: Implement vector math
-    // TODO: Implement holonomic math
-    Serial.println(speedRear);
+
+        if (motorType == HOLONOMIC){
+
     
-    if (speedRear < 0){
-      speedRear *= -1;
-      digitalWrite(REAR_M, HIGH);
-      digitalWrite(FRONT_RIGHT_M, HIGH);
-      digitalWrite(FRONT_LEFT_M, HIGH);
-      
-    } else{
-      digitalWrite(REAR_M, LOW);
-      digitalWrite(FRONT_RIGHT_M, LOW);
-      digitalWrite(FRONT_LEFT_M, LOW);
-    }
+            int rearV   = Serial.parseInt();
+            int frontLV = Serial.parseInt();
+            int frontRV = Serial.parseInt();
     
-    Serial.println(speedRear);
-    Serial.println();
-    
-    
-    analogWrite(REAR_E, speedRear);
-    analogWrite(FRONT_RIGHT_E, speedRear);
-    analogWrite(FRONT_LEFT_E, speedRear);
-      
+            digitalWrite(REAR_M, rearV < 0);
+            digitalWrite(FRONT_LEFT_M, frontLV < 0);           
+            digitalWrite(FRONT_RIGHT_M, frontRV < 0);
+
+            analogWrite(REAR_E,       abs(rearV));
+            analogWrite(FRONT_RIGHT_E,abs(frontLV));
+            analogWrite(FRONT_LEFT_E, abs(frontRV));
+        }
+        else if (motorType == STEPPER){
+
+	    int steps = Serial.parseInt();
+
+            digitalWrite(dir, steps < 0);       //Pull direction pin low to move "forward"
+  		
+	    for(int x= 0; x< abs(steps); x++){  //Loop the forward stepping enough times for motion to be visible
+    		digitalWrite(stp,HIGH);         //Trigger one step forward
+    		delay(1);
+    		digitalWrite(stp,LOW);          //Pull step pin low so it can be triggered again
+    		delay(1);
   }
+        }
+    }
 
+}
+
+//Reset Big Easy Driver pins to default states
+void resetBEDPins(){
+  digitalWrite(stp, LOW);
+  digitalWrite(dir, LOW);
+  digitalWrite(MS1, LOW);
+  digitalWrite(MS2, LOW);
+  digitalWrite(MS3, LOW);
+  digitalWrite(EN, HIGH);
 }
