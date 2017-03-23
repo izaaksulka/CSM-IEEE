@@ -3,13 +3,23 @@ from Vector import Vector
 import RPi.GPIO as GPIO
 import holoMotor as HM
 import time
+import serial
+
         
 class Drive:
-    def __init__(self):#have to pass in the nav because this uses its transform
-        print("fix me - Drive init");
+    def __init__(self, comPort):
         # The radius of the drive wheels
-        self.wheelR = 1 
+        self.wheelR = 1
+        #setting up the serial port
+        self.ser = serial.Serial( comPort, 9600 )
+        initBit = self.ser.inWaiting()
+        t0 = time.clock()
 
+        # Just wait for the serial to connect,
+        # That is, wait until we see something in the input buffer
+        while self.ser.inWaiting() == initBit:
+            print( "", end = '' ) # Literally here to do nothing
+        
         # The unit direction vectors of the wheels
         self.rearDir = Vector( 1, 0 ) 
         self.frontRDir = Vector( -0.5, sqrt(3)/2 ) 
@@ -25,9 +35,11 @@ class Drive:
         self.ROT_SPEED = 10 
         self.LIN_SPEED = 255
         print("Creating motors on hard coded values");
-        self.motors = [ HM.holoMotor(12, 11), HM.holoMotor(32, 31), HM.holoMotor(33, 36) ]
+        #self.motors = [ HM.holoMotor(12, 11), HM.holoMotor(32, 31), HM.holoMotor(33, 36) ]
+        #self.motors = [ , ,]
         #self.nav = newNavModule;
         #self.nav.SetDriver(self);
+        
         
     def SetMotors(self, newMotionTransform):
         #here needs to get the transform from the nav.
@@ -38,42 +50,19 @@ class Drive:
 
     def UpdateSpeeds(self):
         # Do da math
+        
         rearOut = ( self.bodyVel.inner( self.rearDir ) + self.b * self.bodyRot ) / self.wheelR
         frontROut = ( self.bodyVel.inner( self.frontRDir ) + self.b * self.bodyRot ) / self.wheelR
         frontLOut = ( self.bodyVel.inner( self.frontLDir ) + self.b * self.bodyRot ) / self.wheelR
+        print("asfdasfdasfdasfdasfdasfdasfd" + str(int(round(rearOut))));
+        output = "1 %d %d %d\n" % (int(round(rearOut)), int(round(frontLOut)), int(round(frontROut)));
+        print("output = " + output);
+        self.ser.write( output.encode( encoding = "ascii" ) );
+        print("post write");
+        #self.motors[0].setSpeed( rearOut )
+        #self.motors[1].setSpeed( frontROut )
+        #self.motors[2].setSpeed( frontLOut )
 
-        self.motors[0].setSpeed( rearOut )
-        self.motors[1].setSpeed( frontROut )
-        self.motors[2].setSpeed( frontLOut )
 
 
 
-"""
-
-GPIO.setmode( GPIO.BOARD )
-
-motors = [ HM.holoMotor(12, 11), HM.holoMotor(32, 31), HM.holoMotor(33, 36) ]
-
-try:
-	while 1:
-		fSpeed = eval( input( "Forward velocity: " ) )
-		sSpeed = eval( input( "Sideways velocity: " ) )
-		bodyRot = eval( input( "Rotational velocity: " ) )
-		
-		bodyVel = Vector( sSpeed, fSpeed )
-		
-		# Do da math
-		rearOut = ( bodyVel.inner( rearDir ) + b * bodyRot ) / wheelR 	
-		frontROut = ( bodyVel.inner( frontRDir ) + b * bodyRot ) / wheelR 
-		frontLOut = ( bodyVel.inner( frontLDir ) + b * bodyRot ) / wheelR 
-	
-		# Motors are numberd from the back going ccw
-		motors[0].setSpeed( rearOut )
-		motors[1].setSpeed( frontROut )
-		motors[2].setSpeed( frontLOut )
-	
-except KeyboardInterrupt:
-	pass 
-
-GPIO.cleanup()
-	"""	

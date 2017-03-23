@@ -18,16 +18,18 @@ class Navigation:
         self.zigZagDirection = 1;
         self.zigZagVerticalMoveTarget = startPosition[1];
         self.zigZagInVerticalMovement = False;
-        #Here there should be an initialization of the maze array
-        maze = Maze.Maze(5, 5);
+        #initialization of the maze array
+        self.maze = Maze.Maze(BOARD_WIDTH, BOARD_HEIGHT);
+        
     def SetDriver(self, newDriver):
         self.driver = newDriver;
+        
     def Update(self, acSensorData, deltaTransform):
         self.updateCounter += 1;
         self.mracSensorData = acSensorData;
+        
+        self.maze.SendAcSensorData(self.transform.position, acSensorData)
         self.mrDeltaTransform = deltaTransform;
-        #print("current pos = " + str(self.transform.position));
-        #print("delta = " + str(deltaTransform.position));
         self.transform.position = self.transform.position + deltaTransform.position;
         #may need to multiply rotation by this movement
         if(self.updateCounter % 1000 == 0):

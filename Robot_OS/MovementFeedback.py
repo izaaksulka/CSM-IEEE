@@ -11,7 +11,7 @@ class MovementFeedback:
         return Transform.Transform(self.GetDeltaPos(), self.GetDeltaRot());
 
     def GetDeltaPos(self):
-        movement = self.driver.bodyVel * 0.0000005;#here, the feedback unit just
+        movement = self.driver.bodyVel * 0.000005;#here, the feedback unit just
         #copies the setting from
         #the driver - this gets replaced when we actually get data from the
         #sensors.
