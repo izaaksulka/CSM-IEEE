@@ -34,16 +34,19 @@ nav = Navigation.Navigation(startPosition, startRotation, drive);
 movementFeedback = MovementFeedback.MovementFeedback(drive);
 #drive.SetMotors(Transform.Transform(Vector.Vector(0.0, 0.0), 050.0));
 duration = 20.0;
-#Start main loop
-while(1):
-    #reader.Update(); #Update has to get called a lot, otherwise this tool doesn't work very well.
-    UpdateAll();
+
+try:
+    #Start main loop
+    while(1):
+        #reader.Update(); #Update has to get called a lot, otherwise this tool doesn't work very well.
+        UpdateAll();
     
-    if(reader.GetAge() > duration):
-        break;
+        if(reader.GetAge() > duration):
+            break;
 
-    #print(str(reader.GetSensorValue()));
-
+        #print(str(reader.GetSensorValue()));
+except KeyboardInterrupt:
+    pass
 nav.StopAllMotors()
 GPIO.cleanup();
 
