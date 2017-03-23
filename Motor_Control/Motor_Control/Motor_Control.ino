@@ -39,7 +39,7 @@ void setup()
   resetBEDPins(); //Set step, direction, microstep and enable pins to default states
 
   Serial.begin(9600);
-
+  Serial.print(1);
 } 
  
 
