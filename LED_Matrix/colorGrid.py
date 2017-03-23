@@ -17,12 +17,13 @@ class colorGrid:
     # Setup serial connection in specified COM port
     def __init__( self, comPort ):
         self.ser = serial.Serial( comPort, 9600 )
-
+        
+        initBit = self.ser.inWaiting()
         t0 = time.clock()
 
         # Just wait for the serial to connect,
         # That is, wait until we see something in the input buffer
-        while self.ser.in_waiting == 0:
+        while self.ser.inWaiting() == initBit:
             print( "", end = '' ) # Literally here to do nothing
 
         self.loadTime = time.clock() - t0

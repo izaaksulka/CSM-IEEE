@@ -2,7 +2,7 @@ from colorGrid import colorGrid
 
 # For linux the "COM3" will be something like
 # "/dev/tty.usbserial"
-grid = colorGrid( "COM6" )
+grid = colorGrid( "/dev/ttyUSB0" )
 
 grid.printInfo()
 '''
