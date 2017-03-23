@@ -18,7 +18,7 @@
 //Declare variables for functions
 int motorType;
 int state;
-enum motorType = {STEPPER, HOLONMIC}
+enum motorType {STEPPER, HOLONOMIC};
 
 void setup() 
 { 
