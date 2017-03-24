@@ -54,8 +54,9 @@ class Drive:
         else:
             output = "1 %d %d %d\n" % (0,0,0);
 
-        print("output = " + output);
-        
+        #print("output = " + output);
+        print( "Vel: ", self.bodyVel, ", Rot: ", self.bodyRot )
+
         self.ser.write( output.encode( encoding = "ascii" ) );
         print("post write");
         
