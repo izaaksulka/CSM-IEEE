@@ -61,7 +61,9 @@ try:
 					output += "%d " % speed
 				else:
 					output += "0 "
-			output[-1] = "\n"
+        output = list( output )	
+        output[-1] = "\n"
+        output = "".join(output)
 
 		ser.write( output.encode( encoding = "ascii" ) )		
 	
