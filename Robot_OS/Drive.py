@@ -3,7 +3,9 @@ from Vector import Vector
 import time
 import serial
 
-DRIVE_SCALE = 2.54 
+OFFSET = 40.0                       #minimum write value that results in movement
+DRIVE_SCALE = (255 - OFFSET)/100.0  #scaled up to account for the offset
+
 class Drive:
     def __init__(self, comPort):
         # The radius of the drive wheels
@@ -39,17 +41,24 @@ class Drive:
         self.bodyRot = newMotionTransform.rotation * DRIVE_SCALE;
 
         # Do da math 
-        rearOut = ( self.bodyVel.inner( self.rearDir ) + self.b * self.bodyRot ) / self.wheelR
-        frontROut = ( self.bodyVel.inner( self.frontRDir ) + self.b * self.bodyRot ) / self.wheelR
-        frontLOut = ( self.bodyVel.inner( self.frontLDir ) + self.b * self.bodyRot ) / self.wheelR
-        output = "1 %d %d %d\n" % (int(round(rearOut)), int(round(frontLOut)), int(round(frontROut)));
+        rearOut   =  ( self.bodyVel.inner( self.rearDir   ) + self.b * self.bodyRot ) / self.wheelR
+        frontROut =  ( self.bodyVel.inner( self.frontRDir ) + self.b * self.bodyRot ) / self.wheelR
+        frontLOut =  ( self.bodyVel.inner( self.frontLDir ) + self.b * self.bodyRot ) / self.wheelR
+
+        rearOut += OFFSET * (-1 if rearOut < 0 else 1)
+        frontROut += OFFSET * (-1 if frontROut < 0 else 1)
+        frontLOut += OFFSET * (-1 if frontLOut < 0 else 1)
+
+        if self.bodyVel != Vector(0.0,0.0) or self.bodyRot != 0.0:
+            output = "1 %d %d %d\n" % (int(round(rearOut)), int(round(frontLOut)), int(round(frontROut)));
+        else:
+            output = "1 %d %d %d\n" % (0,0,0);
+
         print("output = " + output);
+        
         self.ser.write( output.encode( encoding = "ascii" ) );
         print("post write");
+        
         #self.motors[0].setSpeed( rearOut )
         #self.motors[1].setSpeed( frontROut )
         #self.motors[2].setSpeed( frontLOut )
-
-
-
-
