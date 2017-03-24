@@ -9,10 +9,10 @@ DRIVE_SCALE = (255 - OFFSET)/100.0  #scaled up to account for the offset
 class Drive:
     def __init__(self, comPort):
         # The radius of the drive wheels
-        self.wheelR = 1
+        self.wheelR = 1.125
         
         # Wheel baseline (distance from the center of the chassis to the wheel)
-        self.b = 1
+        self.b = 5.5 
 
         # The unit direction vectors of the wheels
         self.rearDir = Vector( 1, 0 ) 
