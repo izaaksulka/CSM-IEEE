@@ -31,43 +31,43 @@ initBit = ser.inWaiting()
 t0 = time.clock()
 
 while ser.inWaiting() == initBit:
-	print( "", end = '' )
+    print( "", end = '' )
 
 try:
-	while 1:
-		setMotor = eval( input( "Select which motor to set (0-3): " ) )
+    while 1:
+        setMotor = eval( input( "Select which motor to set (0-3): " ) )
 
-		# Set all the motors
-		if setMotor == 3:
-			fSpeed = eval( input( "Forward velocity: " ) )
-			sSpeed = eval( input( "Sideways velocity: " ) )
-			bodyRot = eval( input( "Rotational velocity: " ) )
+        # Set all the motors
+        if setMotor == 3:
+            fSpeed = eval( input( "Forward velocity: " ) )
+            sSpeed = eval( input( "Sideways velocity: " ) )
+            bodyRot = eval( input( "Rotational velocity: " ) )
 
-			bodyVel = Vector( sSpeed, fSpeed )
-		
-			# Do da math
-			rearOut = ( bodyVel.inner( rearDir ) + b * bodyRot ) / wheelR 	
-			frontROut = ( bodyVel.inner( frontRDir ) + b * bodyRot ) / wheelR 
-			frontLOut = ( bodyVel.inner( frontLDir ) + b * bodyRot ) / wheelR 
+            bodyVel = Vector( sSpeed, fSpeed )
+        
+            # Do da math
+            rearOut = ( bodyVel.inner( rearDir ) + b * bodyRot ) / wheelR   
+            frontROut = ( bodyVel.inner( frontRDir ) + b * bodyRot ) / wheelR 
+            frontLOut = ( bodyVel.inner( frontLDir ) + b * bodyRot ) / wheelR 
 
-			output = "1 %d %d %d\n" % ( rearOut, frontROut, frontLOut )
-			print( output )
-		else:
-			speed = eval( input( "Motor Speed: " ) )
+            output = "1 %d %d %d\n" % ( rearOut, frontROut, frontLOut )
+            print( output )
+        else:
+            speed = eval( input( "Motor Speed: " ) )
 
-			output = "1 "
-			for i in range(3):
-				if i == setMotor:
-					output += "%d " % speed
-				else:
-					output += "0 "
-        output = list( output )	
+            output = "1 "
+            for i in range(3):
+                if i == setMotor:
+                    output += "%d " % speed
+                else:
+                    output += "0 "
+        output = list( output ) 
         output[-1] = "\n"
         output = "".join(output)
 
-		ser.write( output.encode( encoding = "ascii" ) )		
-	
+        ser.write( output.encode( encoding = "ascii" ) )        
+    
 except KeyboardInterrupt:
-	pass 
-		
+    pass 
+        
 ser.close()
