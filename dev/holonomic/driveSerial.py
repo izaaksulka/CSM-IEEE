@@ -15,7 +15,7 @@ b = 1
 # The unit direction vectors of the wheels
 rearDir = Vector( 1, 0 ) 
 frontRDir = Vector( -0.5, sqrt(3)/2 ) 
-frontLDir = Vector( -0.5, -sqrt(3)/2 ) 
+frontLDir = Vector( -0.5, -sqrt(3)/2 )
 
 
 # How we want the body to move
@@ -46,12 +46,18 @@ try:
             bodyVel = Vector( sSpeed, fSpeed )
         
             # Do da math
-            rearOut = ( bodyVel.inner( rearDir ) + b * bodyRot ) / wheelR   
-            frontROut = ( bodyVel.inner( frontRDir ) + b * bodyRot ) / wheelR 
-            frontLOut = ( bodyVel.inner( frontLDir ) + b * bodyRot ) / wheelR 
+            rearOut = ( bodyVel.inner( rearDir ) - b * bodyRot ) / wheelR   
+            frontROut = ( bodyVel.inner( frontRDir ) - b * bodyRot ) / wheelR 
+            frontLOut = ( bodyVel.inner( frontLDir ) - b * bodyRot ) / wheelR 
 
             output = "1 %d %d %d\n" % ( rearOut, frontROut, frontLOut )
             print( output )
+        elif setMotor == 4:
+            rSpeed = eval( input( "rear Speed: " ) )
+            fRSpeed = eval(input("front Right Speed: "))
+            fLSpeed = eval(input("front Left Speed: "))
+
+            output = "1 %d %d %d\n" % (rSpeed, fRSpeed, fLSpeed)
         else:
             speed = eval( input( "Motor Speed: " ) )
 
