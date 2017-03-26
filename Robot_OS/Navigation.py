@@ -8,12 +8,19 @@ BOARD_HEIGHT = 7#feet
 
 class Navigation:
     def __init__(self, startPosition, startRotation, newDriver):
-        
+       
+        self.position = startPosition
+        self.rotation = startRotation
+
+        self.velocity = Vector( 0, 0 )
+        self.rotVelocity = 0
+    
+        ''' 
         self.currentMovement = Transform(Vector(0.0, 0.0), 0.0)
         self.initialSearchDirection = 0
-        self.updateCounter = 0
         self.transform = Transform(startPosition, startRotation)
-        
+        '''
+ 
         self.driver = newDriver
 
         # The current algorithm the robot is running
@@ -21,7 +28,9 @@ class Navigation:
 
         #initialization of the maze array
         self.maze = Maze.Maze(BOARD_WIDTH, BOARD_HEIGHT)
-        
+       
+        # For determining the printout rate 
+        #self.updateCounter = 0
         '''
         # For the zig-zag algorithm
         self.zigZagDirection = 1
