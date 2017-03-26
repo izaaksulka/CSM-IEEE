@@ -6,7 +6,7 @@ from Drive import Drive
 from MovementFeedback import MovementFeedback
 
 BEGIN_SEARCH, SEARCH_PERIMETER, FOLLOW_CABLE, OPEN_CACHE, RETURN_HOME = range(5)
-RIGHT, UP, LEFT, DOWN = range(4)
+RIGHT, UP, LEFT, DOWN, ROTATE = range(5)
 
 BOARD_WIDTH = 7#feet
 BOARD_HEIGHT = 7#feet
@@ -86,6 +86,8 @@ class Navigation:
         self.state = SEARCH_PERIMETER
 
         self.curDirection = RIGHT
+        self.lastDirection = RIGHT
+        self.feedback.SetDirection( self.velocity, self.rotation )
 
     
     # Make the robot run along the perimeter until we find the cable 
@@ -99,6 +101,16 @@ class Navigation:
         else:
             # TODO: Write the algorithm where we move forward and turn left
             #       four times
+            if curDirection == ROTATE:
+
+            elif curDirection == RIGHT:
+                delta = self.feedback.Update()
+                self.position += delta[0]
+                self.rotation += delta[1]
+
+                if self.position > 6.5:
+                    curDirection = 
+
         '''
         else:#this part makes a hard coded square loop
             newDir = Vector(0.0, 0.0)
