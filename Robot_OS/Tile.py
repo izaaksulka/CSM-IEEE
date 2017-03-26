@@ -26,3 +26,6 @@ class Tile:
     def CheckTotalAcTime(self):
         if(self.totalAcTime > AC_WIRE_TIME_THRESHOLD):
             self.SetState(wire);
+
+    def GetState(self):
+        return self.state;

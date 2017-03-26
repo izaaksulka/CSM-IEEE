@@ -35,7 +35,7 @@ while ser.inWaiting() == initBit:
 
 try:
     while 1:
-        setMotor = eval( input( "Select which motor to set (0-3): " ) )
+        setMotor = eval( input( "Select which motor to set (0-5): " ) )
 
         # Set all the motors
         if setMotor == 3:
@@ -58,6 +58,9 @@ try:
             fLSpeed = eval(input("front Left Speed: "))
 
             output = "1 %d %d %d\n" % (rSpeed, fRSpeed, fLSpeed)
+        elif setMotor == 5:
+            numSteps = eval( input( "Number of steps to move: " ) )
+            output = "0 %d" % (numSteps)
         else:
             speed = eval( input( "Motor Speed: " ) )
 

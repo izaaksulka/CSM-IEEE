@@ -38,7 +38,8 @@ class Navigation:
             self.UpdateStartup();
         if(self.state == initialSearch):
             self.UpdateInitialSearch();
-        
+        if(self.state == track):
+            self.UpdateTrack();
         #print("Navigation.Update()");
         #changeMotors = False;
 
@@ -52,7 +53,7 @@ class Navigation:
         self.currentMovement = Transform.Transform(Vector.Vector(100.0, 0.0), 0.0);
         self.SendNewMovement();
         self.state = initialSearch;
-    """    
+        
     def UpdateInitialSearch(self):
         #print("Working on initialSearch");
         if(self.mracSensorData == True):
@@ -86,6 +87,9 @@ class Navigation:
                 self.initialSearchDirection += 1;
                 if(self.initialSearchDirection > 3):#loop back to zero if gone around every side.
                     self.initialSearchDirection = 0;
+    def UpdateTrack():
+        x =3;
+        return;
      """
     def UpdateInitialSearch(self):
         newDir = Vector.Vector(0.0, 0.0);
@@ -113,6 +117,7 @@ class Navigation:
             self.SendNewMovement();
         
         #self.state = goToTarget;
+    """
     def FinishedZigZagSidewaysMovement(self):
         self.zigZagDirection = 0 if (self.zigZagDirection == 1) else 1;
         self.zigZagInVerticalMovement= True;

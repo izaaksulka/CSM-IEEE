@@ -77,3 +77,5 @@ class Drive:
         #self.motors[0].setSpeed( rearOut )
         #self.motors[1].setSpeed( frontROut )
         #self.motors[2].setSpeed( frontLOut )
+    def GetMovementMode(self):
+        return self.movementMode;

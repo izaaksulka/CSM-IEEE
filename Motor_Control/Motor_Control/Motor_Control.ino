@@ -8,12 +8,12 @@
 #define FRONT_RIGHT_M 8
 #define FRONT_LEFT_M 12
 
-#define stp 2
-#define dir 3
+#define stp 0
+#define dir 1
 #define MS1 4
 #define MS2 5
 #define MS3 6
-#define EN  7
+#define EN  2
 
 //Declare variables for functions
 int motorType;
@@ -44,8 +44,7 @@ void setup()
  
 
 void loop() {
-
-  
+ 
     if (Serial.available() > 0) {
 
         motorType = Serial.parseInt();
@@ -68,16 +67,16 @@ void loop() {
         }
         else if (motorType == STEPPER){
 
-	    int steps = Serial.parseInt();
+	        int steps = Serial.parseInt();
 
             digitalWrite(dir, steps < 0);       //Pull direction pin low to move "forward"
   		
-	    for(int x= 0; x< abs(steps); x++){  //Loop the forward stepping enough times for motion to be visible
-    		digitalWrite(stp,HIGH);         //Trigger one step forward
-    		delay(1);
-    		digitalWrite(stp,LOW);          //Pull step pin low so it can be triggered again
-    		delay(1);
-  }
+	        for(int x= 0; x< abs(steps); x++){  //Loop the forward stepping enough times for motion to be visible
+    		    digitalWrite(stp,HIGH);         //Trigger one step forward
+        		delay(1);
+        		digitalWrite(stp,LOW);          //Pull step pin low so it can be triggered again
+        		delay(1);
+            }
         }
     }
 
