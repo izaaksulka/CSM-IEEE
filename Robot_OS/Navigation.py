@@ -2,12 +2,17 @@ from Transform import Transform
 from Vector import Vector
 import Maze
 
+from Drive import Drive
+from MovementFeedback import MovementFeedback
+
 BEGIN_SEARCH, SEARCH_PERIMETER, FOLLOW_CABLE, OPEN_CACHE, RETURN_HOME = range(5)
+RIGHT, UP, LEFT, DOWN = range(4)
+
 BOARD_WIDTH = 7#feet
 BOARD_HEIGHT = 7#feet
 
 class Navigation:
-    def __init__(self, startPosition, startRotation, newDriver):
+    def __init__(self, startPosition, startRotation, driveBoard):
        
         self.position = startPosition
         self.rotation = startRotation
@@ -15,20 +20,25 @@ class Navigation:
         self.velocity = Vector( 0, 0 )
         self.rotVelocity = 0
     
-        ''' 
-        self.currentMovement = Transform(Vector(0.0, 0.0), 0.0)
-        self.initialSearchDirection = 0
-        self.transform = Transform(startPosition, startRotation)
-        '''
- 
-        self.driver = newDriver
-
         # The current algorithm the robot is running
         self.state = BEGIN_SEARCH
+  
+        # Initialize drive 
+        self.drive = Drive( driveBoard )
+
+        self.feedback = MovementFeedback()
 
         #initialization of the maze array
         self.maze = Maze.Maze(BOARD_WIDTH, BOARD_HEIGHT)
        
+        ''' 
+        self.currentMovement = Transform(Vector(0.0, 0.0), 0.0)
+        self.initialSearchDirection = 0
+        self.transform = Transform(startPosition, startRotation)
+
+        self.driver = newDriver
+        '''
+
         # For determining the printout rate 
         #self.updateCounter = 0
         '''
@@ -41,43 +51,55 @@ class Navigation:
         self.driver = newDriver
         
     def Update(self, acSensorData, deltaTransform):
-        self.mracSensorData = acSensorData
+    
+        self.foundCable = acSensorData
         
-        self.maze.SendAcSensorData(self.transform.position, acSensorData)
-        self.mrDeltaTransform = deltaTransform
-        self.transform.position = self.transform.position + deltaTransform.position
+        # Map cable onto the LED Matrix
+        self.maze.SendAcSensorData(self.position, acSensorData)
+
+        #self.transform.position = self.transform.position + deltaTransform.position
         
         # Call the appropriate update function based on what algo
         # we're running right now
-        if (self.state == BEGIN_SEARCH):
+        if self.state == BEGIN_SEARCH:
             self.UpdateStartup()
-        elif(self.state == SEARCH_PERIMETER):
+        elif self.state == SEARCH_PERIMETER:
             self.PerimeterSearch()
-        elif(self.state == FOLLOW_CABLE):
+        elif self.state == FOLLOW_CABLE:
             self.UpdateTrack()
         
         '''
         # Print out where we're at right now
         self.updateCounter += 1
         if(self.updateCounter % 1000 == 0):
-            print("Transform => " + self.transform.ToString())
+            print("Transform => " + self.transform.ThoString())
         '''
 
     # Start the robot off by making it move forward
     def UpdateStartup(self):
         #print("Begin Search...")
-        self.currentMovement = Transform(Vector(100.0, 0.0), 0.0)
+        #self.currentMovement = Transform(Vector(100.0, 0.0), 0.0)
+        self.velocity = Vector( 0, 100 )
+        self.rotVelocity = 0.0
+
         self.SendNewMovement()
         self.state = SEARCH_PERIMETER
+
+        self.curDirection = RIGHT
+
     
     # Make the robot run along the perimeter until we find the cable 
     def PerimeterSearch(self):
         #print("Searching perimeter for current...")
-        if(self.mracSensorData == True):
+        if self.foundCable == True:
             self.state = FOLLOW_CABLE
             #should probably set a value in the maze array somewhere around here
-            self.currentMovement = Transform(Vector(0.0, 0.0), -50.0)
-            self.SendNewMovement()
+            #self.currentMovement = Transform(Vector(0.0, 0.0), -50.0)
+            #self.SendNewMovement()
+        else:
+            # TODO: Write the algorithm where we move forward and turn left
+            #       four times
+        '''
         else:#this part makes a hard coded square loop
             newDir = Vector(0.0, 0.0)
             needNewMovementSent = False
@@ -104,6 +126,7 @@ class Navigation:
                 self.initialSearchDirection += 1
                 if(self.initialSearchDirection > 3):#loop back to zero if gone around every side.
                     self.initialSearchDirection = 0
+        '''
 
     # Follow the cable
     def UpdateTrack():

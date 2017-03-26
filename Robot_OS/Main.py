@@ -15,17 +15,20 @@ print("Start")
 reader = ACDetectorReader.ACDetectorReader(acDetectorPort)
 
 #initialize Drive
-drive = Drive.Drive("/dev/ttyACM0")
+#drive = Drive.Drive("/dev/ttyACM0")
+driveBoard = "/dev/ttyACM0"
 
 #Initialize navigation
 startPosition = Vector.Vector(0.5, 6.4999)#measured in feet
 startRotation = 0.0
-nav = Navigation.Navigation(startPosition, startRotation, drive)
+nav = Navigation.Navigation(startPosition, startRotation, driveBoard)
 
 #Initialize MovementFeedback
-movementFeedback = MovementFeedback.MovementFeedback(drive)
+#movementFeedback = MovementFeedback.MovementFeedback(drive)
 #drive.SetMotors(Transform.Transform(Vector.Vector(0.0, 0.0), 050.0))
-duration = 20.0
+
+# However long we have to map the whole thing
+duration = 180.0
 
 try:
     #Start main loop
