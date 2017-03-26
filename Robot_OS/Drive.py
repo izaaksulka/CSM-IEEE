@@ -5,9 +5,11 @@ import serial
 
 OFFSET = 40.0                       #minimum write value that results in movement
 DRIVE_SCALE = (255 - OFFSET)/100.0  #scaled up to account for the offset
-
+NO_MOVEMENT, TRANSLATE, ROTATE = range(3);
 class Drive:
     def __init__(self, comPort):
+        #movement mode is either translate or rotate
+        self.movementMode = NO_MOVEMENT;
         # The radius of the drive wheels
         self.wheelR = 1.125
         
@@ -35,11 +37,23 @@ class Drive:
         self.bodyVel = Vector( 0, 1 ) 
 
     def SetMotors(self, newMotionTransform):
-        #here needs to get the transform from the nav.
+        
         
         self.bodyVel = newMotionTransform.position * DRIVE_SCALE;
         self.bodyRot = newMotionTransform.rotation * DRIVE_SCALE;
 
+        nonZeroTransformComponents = 0;
+        if(self.bodyVel == Vector(0, 0)):
+            self.movementMode = TRANSLATE;
+            nonZeroTransformComponents += 1;
+        if(self.bodyRot == 0.0):
+            self.movementMode = ROTATE;
+            nonZeroTransformComponents += 1;
+        if(nonZeroTransformComponents == 0):
+            self.movementMode = NO_MOVEMENT;
+        if(nonZeroTransformComponents == 2):
+            print("Drive was sent a translate and rotate instruction at the same time\n"+
+                  "Currently doesn't track feedback from that correctly");
         # Do da math 
         rearOut   =  ( self.bodyVel.inner( self.rearDir   ) + self.b * self.bodyRot ) / self.wheelR
         frontROut =  ( self.bodyVel.inner( self.frontRDir ) + self.b * self.bodyRot ) / self.wheelR

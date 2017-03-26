@@ -32,8 +32,8 @@ class Navigation:
         self.mrDeltaTransform = deltaTransform;
         self.transform.position = self.transform.position + deltaTransform.position;
         #may need to multiply rotation by this movement
-        if(self.updateCounter % 1000 == 0):
-            print("Transform => " + self.transform.ToString());
+        #if(self.updateCounter % 1000 == 0):
+            #print("Transform => " + self.transform.ToString());
         if (self.state == startup):
             self.UpdateStartup();
         if(self.state == initialSearch):
