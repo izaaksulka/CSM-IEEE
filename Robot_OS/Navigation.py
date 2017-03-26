@@ -99,6 +99,7 @@ class Navigation:
         else:
             # TODO: Write the algorithm where we move forward and turn left
             #       four times
+            self.curDistance = 0
         '''
         else:#this part makes a hard coded square loop
             newDir = Vector(0.0, 0.0)
