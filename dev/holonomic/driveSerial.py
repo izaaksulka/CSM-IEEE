@@ -58,9 +58,10 @@ try:
             fLSpeed = eval(input("front Left Speed: "))
 
             output = "1 %d %d %d\n" % (rSpeed, fRSpeed, fLSpeed)
+        # Sets the stepper motor to move numSteps steps
         elif setMotor == 5:
             numSteps = eval( input( "Number of steps to move: " ) )
-            output = "0 %d" % (numSteps)
+            output = "0 %d\n" % (numSteps)
         else:
             speed = eval( input( "Motor Speed: " ) )
 
