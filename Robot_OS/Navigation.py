@@ -139,13 +139,34 @@ class Navigation:
         if self.paused:
             self.StopAllMotors()
             self.feedback.SetDirection( self.velocity, self.rotVelocity )
+
             # Map cable onto the LED Matrix
             self.maze.SendAcSensorData(self.position, ACSensorData) 
+
             if time.time() - self.startPause > PAUSE_DURATION:
                 self.paused = False
                 self.startPause = time.time()
 
-                self.velocity = MOVE_FORWARD
+                if self.curDirection == RIGHT:
+                    self.velocity = MOVE_FORWARD
+                    self.targetPos = ( self.targetPos[0] + 1, self.targetPos[1] )
+
+                elif self.curDirection == LEFT:
+                    self.velocity = MOVE_FORWARD
+                    self.targetPos = ( self.targetPos[0] - 1, self.targetPos[1] )
+
+                elif self.curDirection == ROTATE_CW:
+                    self.rotVelocity = -ROTATE_SPEED
+
+                elif self.curDirection == ROTATE_CCW:
+                    self.rotVelocity = ROTATE_SPEED
+                
+                elif self.curDirection == UP:
+                    if self.lastLinear == RIGHT:
+                        self.rotVelocity = -ROTATE_SPEED
+                    else: 
+                        self.rotVelocity = ROTATE_SPEED
+
                 self.feedback.SetDirection( self.velocity, self.rotVelocity )
             return
 
@@ -159,15 +180,19 @@ class Navigation:
 
         #Moving from left or right to rotating
         if self.curDirection == RIGHT and self.position[0] > 5.5:
+            self.paused = True
+            self.startPause = time.time()
             self.SetRotate(90)
         elif self.curDirection == LEFT and self.position[0] < 1.5:
+            self.paused = True
+            self.startPause = time.time()
             self.SetRotate(-90)
 
-        elif self.curDirection == RIGHT and self.position[0] > targetPos[0]:
-            self.paused = True;
+        elif self.curDirection == RIGHT and self.position[0] > self.targetPos[0]:
+            self.paused = True
             self.startPause = time.time()
-        elif self.curDirection == LEFT and self.position[0] < targetPos[0]:
-            self.paused = True;
+        elif self.curDirection == LEFT and self.position[0] < self.targetPos[0]:
+            self.paused = True
             self.startPause = time.time()        
 
         #Moving from going up to rotating
@@ -177,6 +202,8 @@ class Navigation:
                 self.SetRotate(90)
             else: 
                 self.SetRotate(-90)
+            self.paused = True
+            self.startPause = time.time()
 
         #Moving from rotating to the next desired direction
         elif self.curDirection == ROTATE_CCW and self.rotation >= self.targetAngle:
@@ -196,13 +223,13 @@ class Navigation:
 
         if self.lastLinear == UP:
             if self.curDirection == ROTATE_CCW:
-                self.targetPos = (position[0] - 1, position[1])
+                self.targetPos = (self.position[0] - 1, self.position[1])
                 self.curDirection = LEFT
             else:
-                self.targetPos = (position[0] + 1, position[1])
+                self.targetPos = (self.position[0] + 1, self.position[1])
                 self.curDirection = RIGHT
         else:
-            self.targetPos = (position[0] , position[1] - 1)
+            self.targetPos = (self.position[0] , self.position[1] - 1)
             self.curDirection = UP
 
         self.velocity = MOVE_FORWARD
