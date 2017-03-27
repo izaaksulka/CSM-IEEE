@@ -11,6 +11,7 @@ DELTA_TIME = 1 / float(POLL_RATE)
 
 # Convert mouse distance to feet    
 DISTANCE_SCALE = 0.00857
+ROTATION_SCALE = 0.6
 '''
 THETA = 60.0
 
@@ -65,10 +66,10 @@ class MovementFeedback:
 
             deltaTime = self.curPoll - self.lastPoll
             
-            distanceTraveled = Vector( self.velocity.inner(Vector(sin(self.rotation), cos(self.rotation)))  * deltaTime, 
-                                       self.velocity.inner(Vector(cos(self.rotation), -sin(self.rotation))) * deltaTime
+            distanceTraveled = Vector( self.velocity.inner(Vector(sin(self.rotation), cos(self.rotation)))  * deltaTime * DISTANCE_SCALE, 
+                                       self.velocity.inner(Vector(cos(self.rotation), -sin(self.rotation))) * deltaTime * DISTANCE_SCALE )
 
-            distanceRotated = self.rotVelocity * deltaTime
+            distanceRotated = self.rotVelocity * deltaTime * ROTATION_SCALE
 
             self.lastPoll = self.curPoll
 
