@@ -8,6 +8,7 @@ from Drive import Drive
 from MovementFeedback import MovementFeedback
 
 import time
+PAUSE_DURATION = 2.0 
 
 #BEGIN_SEARCH, SEARCH_PERIMETER, FOLLOW_CABLE, OPEN_CACHE, RETURN_HOME = range(5)
 BEGIN_SEARCH, SCAN_BOARD, OPEN_CACHE, RETURN_HOME = range(4)
@@ -120,6 +121,7 @@ class Navigation:
                 self.state = SCAN_BOARD
                 self.SetForward()
                 self.curRow = int(self.position[1])
+                self.paused = True
         else:
             self.velocity = MOVE_FORWARD
             self.rotVelocity = STOP_ROTATION
@@ -133,7 +135,8 @@ class Navigation:
     def ScanBoard(self):
         #print("Searching perimeter for current...")
 
-        
+        if self.paused:
+             
         #if it is positioned in the top right corner and is done scanning
         if self.curDirection == ROTATE_CCW and self.curRow == 1:
             self.StopAllMotors()
