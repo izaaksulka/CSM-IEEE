@@ -34,7 +34,7 @@ class Tile:
         else:#meaning there si not a wire
             return self.SetState(FOAM)
         
-         '''
+        '''
         currentTime = time.time()
         if(newAcData != self.lastAcData):
             if(newAcData == False):

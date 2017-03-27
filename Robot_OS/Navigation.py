@@ -21,7 +21,7 @@ MOVE_FORWARD = Vector( 0, 150 )
 ROTATE_SPEED = 75
 
 class Navigation:
-    def __init__(self, startPosition, startRotation, driveBoard):
+    def __init__(self, startPosition, startRotation, driveBoard, mapBoard):
        
         self.position = startPosition
         self.rotation = startRotation
@@ -39,7 +39,7 @@ class Navigation:
         self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
         #initialization of the maze array
-        self.maze = Maze.Maze(BOARD_WIDTH, BOARD_HEIGHT)
+        self.maze = Maze.Maze(BOARD_WIDTH, BOARD_HEIGHT, mapBoard)
         
         self.curDirection = RIGHT 
         ''' 

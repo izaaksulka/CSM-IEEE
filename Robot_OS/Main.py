@@ -17,11 +17,12 @@ reader = ACDetectorReader.ACDetectorReader(acDetectorPort)
 #initialize Drive
 #drive = Drive.Drive("/dev/ttyACM0")
 driveBoard = "/dev/ttyACM0"
+mapBoard = "/dev/ttyUSB0"
 
 #Initialize navigation
 startPosition = Vector.Vector(0.5, 6.5)#measured in feet
 startRotation = 0.0
-nav = Navigation.Navigation(startPosition, startRotation, driveBoard)
+nav = Navigation.Navigation(startPosition, startRotation, driveBoard, mapBoard)
 
 #Initialize MovementFeedback
 #movementFeedback = MovementFeedback.MovementFeedback(drive)

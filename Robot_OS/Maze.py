@@ -27,25 +27,29 @@ class Maze:
             j = 0
             self.tiles[i] = [None] * y
             while(j < y):
+                
                 self.tiles[i][j] = Tile.Tile(i, j)
                 j += 1
             i += 1
         #self.lastPosition = Vector.Vector(0, 6)
 
+        self.tiles[0][6].SetState(0)
+        self.Output( 0, 6 )  
+        
     def SendAcSensorData(self, position, data):
         x = int(position[0])
         y = int(position[1])
         
         if(self.tiles[x][y].UpdateACSensorData(data)):#returns true of state changes
-            self.Output()
+            self.Output(x, y)
         
     def Output(self, x, y):
         
         if x >= 0 and x < self.width and y >= 0 and y < self.height:
-            output = "%d %d %d\n" % ( x, y, self.tile[x][y].GetColor() )
+            output = "%d %d %d\n" % ( x, y, self.tiles[x][y].GetColor() )
             self.ser.write( output.encode( encoding = "ascii" ) )
         else:
-            print( "%d %d %d is out of range!" % ( x, y, self.tile[x][y].GetColor() ) )        
+            print( "%d %d %d is out of range!" % ( x, y, self.tiles[x][y].GetColor() ) )        
         '''
         if(position != self.lastPosition):
             self.tiles[lastx][lasty].UpdateACSensorData(False)
