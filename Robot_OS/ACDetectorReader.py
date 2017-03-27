@@ -17,7 +17,7 @@ class ACDetectorReader:
  #       self.wireDetected = False;
     def TakeReading(self):
         
-        return GPIO.input( self.pinID );
+        return not GPIO.input( self.pinID );
 
     def GetSensorValue(self): #use this one to get a value out of this class
         #print("ACSensorReader: " + str(self.currentTime - self.lastOnTime < self.delayForFalseReading));
