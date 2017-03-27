@@ -64,13 +64,12 @@ class Navigation:
         self.zigZagVerticalMoveTarget = startPosition[1]
         self.zigZagInVerticalMovement = False
         '''
-    def Update(self, acSensorData):
-    
-        self.foundCable = acSensorData
+    def Update(self, ACSensorData):
         
+        '''
         # Map cable onto the LED Matrix
-        self.maze.SendAcSensorData(self.position, acSensorData)
-
+        self.maze.SendAcSensorData(self.position, ACSensorData)
+        '''
         delta = self.feedback.Update(self.rotation)
         newPosX = self.position[0] + delta[0][0]
         newPosY = self.position[1] + delta[0][1]
@@ -85,7 +84,7 @@ class Navigation:
         if self.state == BEGIN_SEARCH:
             self.UpdateStartup()
         elif self.state == SCAN_BOARD:
-            self.ScanBoard()
+            self.ScanBoard( ACSensorData )
         elif self.state == OPEN_CACHE:
             print( "Donne!" )
             self.maze.PrintMap()
@@ -121,7 +120,9 @@ class Navigation:
                 self.state = SCAN_BOARD
                 self.SetForward()
                 self.curRow = int(self.position[1])
+
                 self.paused = True
+                self.startPause = time.time()
         else:
             self.velocity = MOVE_FORWARD
             self.rotVelocity = STOP_ROTATION
@@ -132,11 +133,23 @@ class Navigation:
         self.feedback.SetDirection( self.velocity, self.rotation )
         '''
 
-    def ScanBoard(self):
+    def ScanBoard(self, ACSensorData):
         #print("Searching perimeter for current...")
 
         if self.paused:
-             
+            self.StopAllMotors()
+            self.feedback.SetDirection( self.velocity, self.rotVelocity )
+            # Map cable onto the LED Matrix
+            self.maze.SendAcSensorData(self.position, ACSensorData) 
+            if time.time() - self.startPause > PAUSE_DURATION:
+                self.paused = False
+                self.startPause = time.time()
+
+                self.velocity = MOVE_FORWARD
+                self.feedback.SetDirection( self.velocity, self.rotVelocity )
+            return
+
+
         #if it is positioned in the top right corner and is done scanning
         if self.curDirection == ROTATE_CCW and self.curRow == 1:
             self.StopAllMotors()
@@ -149,6 +162,13 @@ class Navigation:
             self.SetRotate(90)
         elif self.curDirection == LEFT and self.position[0] < 1.5:
             self.SetRotate(-90)
+
+        elif self.curDirection == RIGHT and self.position[0] > targetPos[0]:
+            self.paused = True;
+            self.startPause = time.time()
+        elif self.curDirection == LEFT and self.position[0] < targetPos[0]:
+            self.paused = True;
+            self.startPause = time.time()        
 
         #Moving from going up to rotating
         elif self.curDirection == UP and self.position[1] < self.curRow - 0.5:
@@ -176,10 +196,13 @@ class Navigation:
 
         if self.lastLinear == UP:
             if self.curDirection == ROTATE_CCW:
+                self.targetPos = (position[0] - 1, position[1])
                 self.curDirection = LEFT
             else:
+                self.targetPos = (position[0] + 1, position[1])
                 self.curDirection = RIGHT
         else:
+            self.targetPos = (position[0] , position[1] - 1)
             self.curDirection = UP
 
         self.velocity = MOVE_FORWARD
