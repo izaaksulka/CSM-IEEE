@@ -2,7 +2,7 @@ from Transform import Transform
 from Vector import Vector
 import Maze
 
-from math import PI, cos, sin 
+from math import pi, cos, sin 
 
 from Drive import Drive
 from MovementFeedback import MovementFeedback
@@ -128,7 +128,7 @@ class Navigation:
         elif self.curDirection == UP and self.position[1] < self.curRow - 0.5:
             if self.lastLinear == RIGHT:
                 self.SetRotate(False)
-            else 
+            else: 
                 self.SetRotate(True)
 
         #Moving from rotating to the next desired direction
@@ -211,7 +211,7 @@ class Navigation:
         self.rotVelocity = STOP_ROTATION
 
     def toRad(angle):
-        return angle * PI / 180.0
+        return angle * pi / 180.0
     
 
 '''
