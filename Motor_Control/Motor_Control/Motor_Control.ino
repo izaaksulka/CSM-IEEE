@@ -10,9 +10,9 @@
 
 #define stp 0
 #define dir 1
-#define MS1 4
-#define MS2 5
-#define MS3 6
+#define MS1 3
+#define MS2 4
+#define MS3 5
 #define EN  2
 
 //Declare variables for functions

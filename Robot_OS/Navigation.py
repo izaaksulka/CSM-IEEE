@@ -11,6 +11,12 @@ RIGHT, UP, LEFT, DOWN, ROTATE = range(5)
 BOARD_WIDTH = 7#feet
 BOARD_HEIGHT = 7#feet
 
+STOP = Vector( 0, 0 )
+STOP_ROTATION = 0
+
+MOVE_FORWARD = Vector( 0, 100 )
+ROTATE_CCW = -50
+
 class Navigation:
     def __init__(self, startPosition, startRotation, driveBoard):
        
@@ -47,9 +53,6 @@ class Navigation:
         self.zigZagVerticalMoveTarget = startPosition[1]
         self.zigZagInVerticalMovement = False
         '''
-    def SetDriver(self, newDriver):
-        self.driver = newDriver
-        
     def Update(self, acSensorData, deltaTransform):
     
         self.foundCable = acSensorData
@@ -66,8 +69,11 @@ class Navigation:
         elif self.state == SEARCH_PERIMETER:
             self.PerimeterSearch()
         elif self.state == FOLLOW_CABLE:
-            self.UpdateTrack()
+            self.TrackCable()
         
+        # Tell the chassis what to do now that we've figure that out
+        self.drive.SetMotors( self.velocity, self.rotVelocity )
+
         '''
         # Print out where we're at right now
         self.updateCounter += 1
@@ -93,66 +99,74 @@ class Navigation:
     # Make the robot run along the perimeter until we find the cable 
     def PerimeterSearch(self):
         #print("Searching perimeter for current...")
+
+        delta = self.feedback.Update()
+        self.position += delta[0]
+        self.rotation += delta[1]
+
         if self.foundCable == True:
             self.state = FOLLOW_CABLE
+
+            '''
             #should probably set a value in the maze array somewhere around here
-            #self.currentMovement = Transform(Vector(0.0, 0.0), -50.0)
-            #self.SendNewMovement()
+            self.currentMovement = Transform(Vector(0.0, 0.0), -50.0)
+            self.SendNewMovement()
+            '''
         else:
-            # TODO: Write the algorithm where we move forward and turn left
-            #       four times
-            if curDirection == ROTATE:
+            if self.curDirection == ROTATE and self.rotation >= self.targetAngle:
+                self.SetForward()                    
+            # Once we hit the end of the board,
+            # tell the robot to rotate
+            elif self.curDirection == RIGHT and self.position[0] > 6.5:
+                self.SetRotate()
+            elif self.curDirection == UP and self.position[1] < 0.5:
+                self.SetRotate()
+            elif self.curDirection == LEFT and self.position[0] < 0.5:
+                self.SetRotate()
+            elif self.curDirection == DOWN and self.position[1] > 6.5:
+                self.StopAllMotors()
 
-            elif curDirection == RIGHT:
-                delta = self.feedback.Update()
-                self.position += delta[0]
-                self.rotation += delta[1]
-
-                if self.position > 6.5:
-                    curDirection = 
-
-        '''
-        else:#this part makes a hard coded square loop
-            newDir = Vector(0.0, 0.0)
-            needNewMovementSent = False
-            if(self.initialSearchDirection % 2 == 0):
-                if(self.transform.position[0] < 0.5 or self.transform.position[0] > 6.5):
-                    newDir = Vector(0.0, 100.0) * (self.initialSearchDirection - 1)
-                    needNewMovementSent = True
-                    if(self.transform.position[0] < 0.5):
-                        self.transform.position = Vector(0.5, self.transform.position[1])
-                    else:
-                        self.transform.position = Vector(6.5, self.transform.position[1])
-            else:   
-                if(self.transform.position[1] < 0.5 or self.transform.position[1] > 6.5):
-                    newDir = Vector(100.0, 0.0) * (self.initialSearchDirection - 2)
-                    needNewMovementSent = True
-                    if(self.transform.position[1] < 0.5):
-                        self.transform.position = Vector(self.transform.position[0], 0.5)
-                    else:
-                        self.transform.position = Vector(self.transform.position[0], 6.5)
-                        
-            if(needNewMovementSent):
-                self.currentMovement.position = newDir
-                self.SendNewMovement()
-                self.initialSearchDirection += 1
-                if(self.initialSearchDirection > 3):#loop back to zero if gone around every side.
-                    self.initialSearchDirection = 0
-        '''
-
-    # Follow the cable
-    def UpdateTrack():
-        x =3
-        return
+    def TrackCable(self):
+        
     
+    # Tells the robot to go forward after we've done a rotation
+    def SetForward(self):
+        self.curDirection = self.lastDirection + 1
+        self.lastDirection = ROTATE
+
+        self.velocity = MOVE_FORWARD
+        self.rotation = STOP_ROTATION
+        self.feedback.SetDirection( self.velocity, self.rotation )
+
+    # Tells the robot to turn 90 degrees after it's gone all the way
+    # across the board        
+    def SetRotate(self):
+        self.lastDirection = self.curDirection
+        self.curDirection = ROTATE
+
+        # target angle is ninty degrees from where we started
+        self.targetAngle = self.rotation - 90.0
+
+        self.velocity = STOP
+        self.rotVelocity = ROTATE_CCW
+        self.feedback.SetDirection( self.velocity, self.rotation )
+
+    def StopAllMotors(self):
+        self.velocity = STOP
+        self.rotVelocity = STOP_ROTATION
+    
+
+'''
+    def SetDriver(self, newDriver):
+        self.driver = newDriver
+'''   
+
+'''
     def SendNewMovement(self):
         print("SendNewMovementTransform")
         self.driver.SetMotors(self.currentMovement)
-    def StopAllMotors(self):
-        self.currentMovement.position = Vector( 0, 0 )
-        self.currentMovement.rotation = 0
-        self.SendNewMovement()
-    '''
+'''
+'''
     def PerimeterSearch(self):
         newDir = Vector(0.0, 0.0)
         terminated = False
@@ -189,4 +203,34 @@ class Navigation:
         self.state = FOLLOW_CABLE
         return Vector(0, 0)
     
-    '''
+'''
+
+'''
+        IN PERIMETER SEARCH FUNCTION
+        else:#this part makes a hard coded square loop
+            newDir = Vector(0.0, 0.0)
+            needNewMovementSent = False
+            if(self.initialSearchDirection % 2 == 0):
+                if(self.transform.position[0] < 0.5 or self.transform.position[0] > 6.5):
+                    newDir = Vector(0.0, 100.0) * (self.initialSearchDirection - 1)
+                    needNewMovementSent = True
+                    if(self.transform.position[0] < 0.5):
+                        self.transform.position = Vector(0.5, self.transform.position[1])
+                    else:
+                        self.transform.position = Vector(6.5, self.transform.position[1])
+            else:   
+                if(self.transform.position[1] < 0.5 or self.transform.position[1] > 6.5):
+                    newDir = Vector(100.0, 0.0) * (self.initialSearchDirection - 2)
+                    needNewMovementSent = True
+                    if(self.transform.position[1] < 0.5):
+                        self.transform.position = Vector(self.transform.position[0], 0.5)
+                    else:
+                        self.transform.position = Vector(self.transform.position[0], 6.5)
+                        
+            if(needNewMovementSent):
+                self.currentMovement.position = newDir
+                self.SendNewMovement()
+                self.initialSearchDirection += 1
+                if(self.initialSearchDirection > 3):#loop back to zero if gone around every side.
+                    self.initialSearchDirection = 0
+'''
