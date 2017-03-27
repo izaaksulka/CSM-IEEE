@@ -77,7 +77,7 @@ class Drive:
                                    int(round(frontROut)))
 
         #print("output = " + output)
-        print( "Vel: ", self.bodyVel, ", Rot: ", self.bodyRot )
+        #print( "Vel: ", self.bodyVel, ", Rot: ", self.bodyRot )
 
         self.ser.write( output.encode( encoding = "ascii" ) )
         

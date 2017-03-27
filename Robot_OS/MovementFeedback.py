@@ -8,11 +8,12 @@ from math import cos, sin
 # Number of reading per second
 POLL_RATE = 10
 DELTA_TIME = 1 / float(POLL_RATE)
+
+# Convert mouse distance to feet    
+DISTANCE_SCALE = 0.00857
 '''
 THETA = 60.0
 
-# Convert mouse distance to feet    
-DISTANCE_SCALE = 0.001
 
 #distance from the center of the robot to the mouse
 MOUSE_LOCATION_RADIUS = 0.5;
@@ -47,7 +48,7 @@ class MovementFeedback:
     # Soley for dead reckoning,
     # Tells the movement feedback how the motors are running
     # So that we can "measure" the distance it's traveled
-    def SetDirection( velocity, rotVelocity ):
+    def SetDirection( self, velocity, rotVelocity ):
         self.velocity = velocity
         self.rotVelocity = rotVelocity
 
@@ -64,8 +65,8 @@ class MovementFeedback:
 
             deltaTime = self.curPoll - self.lastPoll
             
-            distanceTraveled = Vector( self.velocity[0] * deltaTime, 
-                                       self.velocity[1] * deltaTime )
+            distanceTraveled = Vector( self.velocity.inner(Vector(sin(self.rotation), cos(self.rotation)))  * deltaTime, 
+                                       self.velocity.inner(Vector(cos(self.rotation), -sin(self.rotation))) * deltaTime
 
             distanceRotated = self.rotVelocity * deltaTime
 

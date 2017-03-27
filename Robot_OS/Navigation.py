@@ -17,7 +17,7 @@ BOARD_HEIGHT = 7#feet
 STOP = Vector( 0, 0 )
 STOP_ROTATION = 0
 
-MOVE_FORWARD = Vector( 0, 100 )
+MOVE_FORWARD = Vector( 0, -100 )
 ROTATE_SPEED = 50
 
 class Navigation:
@@ -36,6 +36,7 @@ class Navigation:
         self.drive = Drive( driveBoard )
 
         self.feedback = MovementFeedback()
+        self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
         #initialization of the maze array
         self.maze = Maze.Maze(BOARD_WIDTH, BOARD_HEIGHT)
@@ -63,6 +64,13 @@ class Navigation:
         # Map cable onto the LED Matrix
         self.maze.SendAcSensorData(self.position, acSensorData)
 
+        delta = self.feedback.Update()
+        newPosX = self.position[0] + delta[0][0]
+        newPosY = self.position[1] + delta[0][1]
+        self.position = Vector( newPosX, newPosY )
+        self.rotation += delta[1]
+    
+        print( "Cur Pos: ", self.position, ", Cur Rotation: ", self.rotation )
         #self.transform.position = self.transform.position + deltaTransform.position
         
         # Call the appropriate update function based on what algo
@@ -92,10 +100,9 @@ class Navigation:
     def UpdateStartup(self):
         #print("Begin Search...")
         #self.currentMovement = Transform(Vector(100.0, 0.0), 0.0)
-        self.velocity = Vector( 0, 100 )
-        self.rotVelocity = 0.0
-
-        self.drive.SetMotors( self.velocity, self.rotVelocity )
+        self.velocity = MOVE_FORWARD
+        self.rotVelocity = STOP_ROTATION
+        self.feedback.SetDirection( self.velocity, self.rotVelocity )
         self.state = SCAN_BOARD
 
         self.curRow = int( self.position[1] )
@@ -109,9 +116,6 @@ class Navigation:
     def ScanBoard(self):
         #print("Searching perimeter for current...")
 
-        delta = self.feedback.Update()
-        self.position += delta[0]
-        self.rotation += delta[1]
         
         #if it is positioned in the top right corner and is done scanning
         if self.curDirection == ROTATE_CCW and self.curRow == 0:
@@ -209,7 +213,7 @@ class Navigation:
     def StopAllMotors(self):
         self.velocity = STOP
         self.rotVelocity = STOP_ROTATION
-
+        self.drive.SetMotors( self.velocity, self.rotVelocity )
     def toRad(angle):
         return angle * pi / 180.0
     
