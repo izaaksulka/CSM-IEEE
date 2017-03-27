@@ -134,6 +134,12 @@ void loop() {
   
   if( Serial.available() > 0 ) {
 
+    // A dummy counter to do somethig while the
+    // loop waits for a good input
+    int ctr = 0;
+    while( Serial.parseInt() != -1 ) 
+      ctr++;
+
     int changeTile[3] = {0};
     for( int i = 0; i < 3; i++ ) {
       changeTile[i] = Serial.parseInt();
