@@ -8,12 +8,12 @@
 #define FRONT_RIGHT_M 8
 #define FRONT_LEFT_M 12
 
-#define stp 0
-#define dir 1
-#define MS1 3
-#define MS2 4
-#define MS3 5
-#define EN  2
+#define stp 2
+#define dir 3
+#define MS1 5
+#define MS2 6
+#define MS3 7
+#define EN  4
 
 //Declare variables for functions
 int motorType;
@@ -76,7 +76,8 @@ void loop() {
         		delay(1);
         		digitalWrite(stp,LOW);          //Pull step pin low so it can be triggered again
         		delay(1);
-            }
+          }
+            resetBEDPins();
         }
     }
 

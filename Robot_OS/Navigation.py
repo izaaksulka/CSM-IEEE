@@ -5,8 +5,9 @@ import Maze
 from Drive import Drive
 from MovementFeedback import MovementFeedback
 
-BEGIN_SEARCH, SEARCH_PERIMETER, FOLLOW_CABLE, OPEN_CACHE, RETURN_HOME = range(5)
-RIGHT, UP, LEFT, DOWN, ROTATE = range(5)
+#BEGIN_SEARCH, SEARCH_PERIMETER, FOLLOW_CABLE, OPEN_CACHE, RETURN_HOME = range(5)
+BEGIN_SEARCH, SCAN_BOARD, OPEN_CACHE, RETURN_HOME = range(4)
+RIGHT, UP, LEFT, ROTATE_CW, ROTATE_CCW = range(5)
 
 BOARD_WIDTH = 7#feet
 BOARD_HEIGHT = 7#feet
@@ -16,6 +17,7 @@ STOP_ROTATION = 0
 
 MOVE_FORWARD = Vector( 0, 100 )
 ROTATE_CCW = -50
+ROTATE_CW = 50
 
 class Navigation:
     def __init__(self, startPosition, startRotation, driveBoard):
@@ -66,10 +68,14 @@ class Navigation:
         # we're running right now
         if self.state == BEGIN_SEARCH:
             self.UpdateStartup()
+        elif self.state == SCAN_BOARD:
+            self.ScanBoard()
+        '''
         elif self.state == SEARCH_PERIMETER:
             self.PerimeterSearch()
         elif self.state == FOLLOW_CABLE:
             self.TrackCable()
+        '''
         
         # Tell the chassis what to do now that we've figure that out
         self.drive.SetMotors( self.velocity, self.rotVelocity )
@@ -89,13 +95,37 @@ class Navigation:
         self.rotVelocity = 0.0
 
         self.SendNewMovement()
-        self.state = SEARCH_PERIMETER
+        self.state = SCAN_BOARD
 
+        self.curRow = int( self.position[1] )
         self.curDirection = RIGHT
+        self.lastDirection == RIGHT
+        '''
         self.lastDirection = RIGHT
         self.feedback.SetDirection( self.velocity, self.rotation )
+        '''
 
-    
+    def ScanBoard(self):
+        #print("Searching perimeter for current...")
+
+        delta = self.feedback.Update()
+        self.position += delta[0]
+        self.rotation += delta[1]
+
+        if self.curDirection == RIGHT and self.position[0] > 6.5:
+            self.curDirection = ROTATE_CCW
+            self.SetRotate(False)
+        elif self.curDirection == LEFT and self.position[0] < 0.5:
+            self.curDirection = ROTATE_CW
+            self.SetRotate(True)
+        elif self.curDirection == UP and self.position[1] < curRow - 0.5:
+                self.curDirection == self.lastDirection
+        elif self.curDirection == ROTATE_CCW and self.rotation <= self.targetAngle
+            if self.lastDirection == RIGHT:
+                self.curDirection = UP
+                self.SetForward()
+            el
+    '''
     # Make the robot run along the perimeter until we find the cable 
     def PerimeterSearch(self):
         #print("Searching perimeter for current...")
@@ -107,11 +137,6 @@ class Navigation:
         if self.foundCable == True:
             self.state = FOLLOW_CABLE
 
-            '''
-            #should probably set a value in the maze array somewhere around here
-            self.currentMovement = Transform(Vector(0.0, 0.0), -50.0)
-            self.SendNewMovement()
-            '''
         else:
             if self.curDirection == ROTATE and self.rotation >= self.targetAngle:
                 self.SetForward()                    
@@ -125,31 +150,39 @@ class Navigation:
                 self.SetRotate()
             elif self.curDirection == DOWN and self.position[1] > 6.5:
                 self.StopAllMotors()
+    '''
 
     def TrackCable(self):
-        
+
     
     # Tells the robot to go forward after we've done a rotation
     def SetForward(self):
-        self.curDirection = self.lastDirection + 1
-        self.lastDirection = ROTATE
+        if self.curRow % 2 == 0:
+            self.curDirection = RIGHT
+        else:
+            self.curDirection = LEFT
 
         self.velocity = MOVE_FORWARD
         self.rotation = STOP_ROTATION
-        self.feedback.SetDirection( self.velocity, self.rotation )
+        self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
     # Tells the robot to turn 90 degrees after it's gone all the way
     # across the board        
-    def SetRotate(self):
-        self.lastDirection = self.curDirection
+    def SetRotate(self, isCW):
         self.curDirection = ROTATE
-
-        # target angle is ninty degrees from where we started
-        self.targetAngle = self.rotation - 90.0
-
         self.velocity = STOP
-        self.rotVelocity = ROTATE_CCW
-        self.feedback.SetDirection( self.velocity, self.rotation )
+
+        if isCW:
+            # target angle is ninty degrees from where we started
+            self.targetAngle = self.rotation + 90.0
+            self.rotVelocity = ROTATE_CW
+        else:
+            # target angle is ninty degrees from where we started
+            self.targetAngle = self.rotation - 90.0
+            self.rotVelocity = ROTATE_CCW
+            
+
+        self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
     def StopAllMotors(self):
         self.velocity = STOP
