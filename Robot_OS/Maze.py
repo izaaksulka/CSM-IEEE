@@ -47,7 +47,7 @@ class Maze:
         self.tiles[0][6].SetState(0)
         #self.Output( 0, 6 )  
         self.PrintMap()
-        
+        self.Connect()        
     def SendAcSensorData(self, position, data):
         x = int(position[0])
         y = int(position[1])
@@ -84,6 +84,15 @@ class Maze:
         #self.ser.write( output.encode( encoding = "ascii" ) )
 
     def Connect(self):
+        ends = []
+        #for every tile 1 space from the edge
+        for i in range(1, 6):
+            #top row
+            if (self.tiles[i][1].GetState() == Tile.WIRE):
+                ends.append(i, 0)
+            if (self.tiles[i][5].GetState() == Tile.WIRE):
+                ends.append(i, 6)
+
         print( "Hello world!" )    
         
 
