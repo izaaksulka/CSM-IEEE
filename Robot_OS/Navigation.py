@@ -20,8 +20,8 @@ BOARD_HEIGHT = 7#feet
 STOP = Vector( 0, 0 )
 STOP_ROTATION = 0
 
-MOVE_FORWARD = Vector( 0, 150 )
-ROTATE_SPEED = 75
+MOVE_FORWARD = Vector( 0, 200 )
+ROTATE_SPEED = 100
 
 class Navigation:
     def __init__(self, startPosition, startRotation, driveBoard, mapBoard):
@@ -76,7 +76,7 @@ class Navigation:
         self.position = Vector( newPosX, newPosY )
         self.rotation += delta[1]
     
-        print( "Cur Pos: ", self.position, ", Cur Rotation: ", self.rotation, ", State: ", self.curDirection )
+        #print( "Cur Pos: ", self.position, ", Cur Rotation: ", self.rotation, ", State: ", self.curDirection )
         #self.transform.position = self.transform.position + deltaTransform.position
         
         # Call the appropriate update function based on what algo
@@ -123,6 +123,7 @@ class Navigation:
 
                 self.paused = True
                 self.startPause = time.time()
+                self.targetPos = ( self.targetPos[0] - 1, self.targetPos[1] )
         else:
             self.velocity = MOVE_FORWARD
             self.rotVelocity = STOP_ROTATION
@@ -140,9 +141,11 @@ class Navigation:
             self.StopAllMotors()
             self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
-            # Map cable onto the LED Matrix
-            self.maze.SendAcSensorData(self.position, ACSensorData) 
 
+            if time.time() - self.startPause > 0.5:
+                # Map cable onto the LED Matrix
+                self.maze.SendAcSensorData(self.position, ACSensorData) 
+                #print( "AC Data: ", ACSensorData )
             if time.time() - self.startPause > PAUSE_DURATION:
                 self.paused = False
                 self.startPause = time.time()

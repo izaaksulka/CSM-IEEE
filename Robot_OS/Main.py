@@ -7,7 +7,7 @@ import Transform
 import MovementFeedback
 
 
-acDetectorPort = 16
+acDetectorPort = 36
 #GPIO.cleanup()
 print("Start")
 
