@@ -48,7 +48,7 @@ class Maze:
     def Output(self, x, y):
         
         if x >= 0 and x < self.width and y >= 0 and y < self.height:
-            output = "%d %d %d\n" % ( x, y, self.tiles[x][y].GetColor() )
+            output = "-1 %d %d %d\n" % ( x, y, self.tiles[x][y].GetColor() )
             print( "To Map: ", output ) 
             self.ser.write( output.encode( encoding = "ascii" ) )
         else:
