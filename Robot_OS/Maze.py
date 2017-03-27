@@ -34,19 +34,22 @@ class Maze:
         #self.lastPosition = Vector.Vector(0, 6)
 
         self.tiles[0][6].SetState(0)
-        self.Output( 0, 6 )  
+        #self.Output( 0, 6 )  
+        self.PrintMap()
         
     def SendAcSensorData(self, position, data):
         x = int(position[0])
         y = int(position[1])
         
         if(self.tiles[x][y].UpdateACSensorData(data)):#returns true of state changes
-            self.Output(x, y)
+           #self.Output(x, y)
+            self.PrintMap()
         
     def Output(self, x, y):
         
         if x >= 0 and x < self.width and y >= 0 and y < self.height:
             output = "%d %d %d\n" % ( x, y, self.tiles[x][y].GetColor() )
+            print( "To Map: ", output ) 
             self.ser.write( output.encode( encoding = "ascii" ) )
         else:
             print( "%d %d %d is out of range!" % ( x, y, self.tiles[x][y].GetColor() ) )        
@@ -59,3 +62,11 @@ class Maze:
         lastx = int(self.lastPosition[0])
         lasty = int(self.lastPosition[1])
         '''
+    def PrintMap(self):
+        output = ""
+        for i in range( self.width ):
+            for j in range( self.height ):
+                output += "%d %d %d " % (i, j, self.tiles[i][j].GetColor())
+
+        output += "\n"
+        self.ser.write( output.encode( encoding = "ascii" ) )

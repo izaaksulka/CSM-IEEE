@@ -17,7 +17,7 @@ class Tile:
         #self.totalAcOnTime = 0
 
     def SetState(self, newState):
-        if(self.state == newState):
+        if(self.state == newState or self.state == START):
             return False
         self.state = newState
         return True
@@ -29,7 +29,7 @@ class Tile:
         
         ratio = self.timesDetected / float(self.timesScanned)
         if(ratio > RATIO_THRESHOLD):
-            print("Found a wire.  x = ", self.x, "  y = ", self.y)
+            #print("Found a wire.  x = ", self.x, "  y = ", self.y)
             return self.SetState(WIRE)
         else:#meaning there si not a wire
             return self.SetState(FOAM)

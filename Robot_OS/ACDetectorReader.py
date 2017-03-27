@@ -16,7 +16,7 @@ class ACDetectorReader:
         GPIO.setup( self.pinID, GPIO.IN );
  #       self.wireDetected = False;
     def TakeReading(self):
-        print( "Reading: ", not GPIO.input( self.pinID ) )        
+        #print( "Reading: ", not GPIO.input( self.pinID ) )        
         return not GPIO.input( self.pinID );
 
     def GetSensorValue(self): #use this one to get a value out of this class

@@ -41,7 +41,10 @@ class Navigation:
         #initialization of the maze array
         self.maze = Maze.Maze(BOARD_WIDTH, BOARD_HEIGHT, mapBoard)
         
-        self.curDirection = RIGHT 
+        self.curDirection = RIGHT
+        self.curRow = 6 
+        
+        self.rotating = False
         ''' 
         self.currentMovement = Transform(Vector(0.0, 0.0), 0.0)
         self.initialSearchDirection = 0
@@ -82,6 +85,7 @@ class Navigation:
             self.ScanBoard()
         elif self.state == OPEN_CACHE:
             print( "Donne!" )
+            self.maze.PrintMap()
         '''
         elif self.state == SEARCH_PERIMETER:
             self.PerimeterSearch()
@@ -103,14 +107,22 @@ class Navigation:
     def UpdateStartup(self):
         #print("Begin Search...")
         #self.currentMovement = Transform(Vector(100.0, 0.0), 0.0)
-        self.velocity = MOVE_FORWARD
-        self.rotVelocity = STOP_ROTATION
-        self.feedback.SetDirection( self.velocity, self.rotVelocity )
-        self.state = SCAN_BOARD
+        
+        if self.position[0] > 1.5 and self.position[1] < 5.5:
+            if not self.rotating:
+                self.SetRotate(-45)
+                self.rotating = True
+            if self.rotation <= 0:
+                self.curDirection = ROTATE_CW
+                self.lastLinear = UP
+                self.state = SCAN_BOARD
+                self.SetForward()
+                self.curRow = int(self.position[1])
+        else:
+            self.velocity = MOVE_FORWARD
+            self.rotVelocity = STOP_ROTATION
+            self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
-        self.curRow = int( self.position[1] )
-        self.curDirection = RIGHT
-        self.lastLinear = RIGHT
         '''
         self.lastDirection = RIGHT
         self.feedback.SetDirection( self.velocity, self.rotation )
@@ -121,23 +133,24 @@ class Navigation:
 
         
         #if it is positioned in the top right corner and is done scanning
-        if self.curDirection == ROTATE_CCW and self.curRow == 0:
+        if self.curDirection == ROTATE_CCW and self.curRow == 1:
+            self.StopAllMotors()
             self.state = OPEN_CACHE
             return
 
         #Moving from left or right to rotating
-        if self.curDirection == RIGHT and self.position[0] > 6.5:
-            self.SetRotate(False)
-        elif self.curDirection == LEFT and self.position[0] < 0.5:
-            self.SetRotate(True)
+        if self.curDirection == RIGHT and self.position[0] > 5.5:
+            self.SetRotate(90)
+        elif self.curDirection == LEFT and self.position[0] < 1.5:
+            self.SetRotate(-90)
 
         #Moving from going up to rotating
         elif self.curDirection == UP and self.position[1] < self.curRow - 0.5:
             self.curRow -= 1
             if self.lastLinear == RIGHT:
-                self.SetRotate(False)
+                self.SetRotate(90)
             else: 
-                self.SetRotate(True)
+                self.SetRotate(-90)
 
         #Moving from rotating to the next desired direction
         elif self.curDirection == ROTATE_CCW and self.rotation >= self.targetAngle:
@@ -169,22 +182,18 @@ class Navigation:
 
     # Tells the robot to turn 90 degrees after it's gone all the way
     # across the board        
-    def SetRotate(self, isCW):
+    def SetRotate(self, deltaAngle):
         self.velocity = STOP
 
         self.lastLinear = self.curDirection
 
-        if isCW:
+        self.targetAngle = self.rotation + deltaAngle
+        
+        if deltaAngle < 0:
             self.curDirection = ROTATE_CW
-
-            # target angle is ninty degrees from where we started
-            self.targetAngle = self.rotation - 90.0
             self.rotVelocity = -ROTATE_SPEED
         else:
             self.curDirection = ROTATE_CCW
-
-            # target angle is ninty degrees from where we started
-            self.targetAngle = self.rotation + 90.0
             self.rotVelocity = ROTATE_SPEED           
 
         self.feedback.SetDirection( self.velocity, self.rotVelocity )

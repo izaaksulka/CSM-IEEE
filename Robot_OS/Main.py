@@ -21,7 +21,7 @@ mapBoard = "/dev/ttyUSB0"
 
 #Initialize navigation
 startPosition = Vector.Vector(0.5, 6.5)#measured in feet
-startRotation = 0.0
+startRotation = 45.0
 nav = Navigation.Navigation(startPosition, startRotation, driveBoard, mapBoard)
 
 #Initialize MovementFeedback
