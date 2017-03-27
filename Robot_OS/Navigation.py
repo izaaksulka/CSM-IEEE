@@ -2,12 +2,14 @@ from Transform import Transform
 from Vector import Vector
 import Maze
 
+from math import PI, cos, sin 
+
 from Drive import Drive
 from MovementFeedback import MovementFeedback
 
 #BEGIN_SEARCH, SEARCH_PERIMETER, FOLLOW_CABLE, OPEN_CACHE, RETURN_HOME = range(5)
 BEGIN_SEARCH, SCAN_BOARD, OPEN_CACHE, RETURN_HOME = range(4)
-RIGHT, UP, LEFT, ROTATE_CW, ROTATE_CCW = range(5)
+RIGHT, LEFT, UP, ROTATE_CW, ROTATE_CCW = range(5)
 
 BOARD_WIDTH = 7#feet
 BOARD_HEIGHT = 7#feet
@@ -16,8 +18,7 @@ STOP = Vector( 0, 0 )
 STOP_ROTATION = 0
 
 MOVE_FORWARD = Vector( 0, 100 )
-ROTATE_CCW = -50
-ROTATE_CW = 50
+ROTATE_SPEED = 50
 
 class Navigation:
     def __init__(self, startPosition, startRotation, driveBoard):
@@ -55,7 +56,7 @@ class Navigation:
         self.zigZagVerticalMoveTarget = startPosition[1]
         self.zigZagInVerticalMovement = False
         '''
-    def Update(self, acSensorData, deltaTransform):
+    def Update(self, acSensorData):
     
         self.foundCable = acSensorData
         
@@ -99,7 +100,7 @@ class Navigation:
 
         self.curRow = int( self.position[1] )
         self.curDirection = RIGHT
-        self.lastDirection == RIGHT
+        self.lastLinear = RIGHT
         '''
         self.lastDirection = RIGHT
         self.feedback.SetDirection( self.velocity, self.rotation )
@@ -111,20 +112,31 @@ class Navigation:
         delta = self.feedback.Update()
         self.position += delta[0]
         self.rotation += delta[1]
+        
+        #if it is positioned in the top right corner and is done scanning
+        if self.curDirection == ROTATE_CCW and self.curRow == 0:
+            self.state = OPEN_CACHE
+            return
 
+        #Moving from left or right to rotating
         if self.curDirection == RIGHT and self.position[0] > 6.5:
-            self.curDirection = ROTATE_CCW
             self.SetRotate(False)
         elif self.curDirection == LEFT and self.position[0] < 0.5:
-            self.curDirection = ROTATE_CW
             self.SetRotate(True)
-        elif self.curDirection == UP and self.position[1] < curRow - 0.5:
-                self.curDirection == self.lastDirection
-        elif self.curDirection == ROTATE_CCW and self.rotation <= self.targetAngle
-            if self.lastDirection == RIGHT:
-                self.curDirection = UP
-                self.SetForward()
-            el
+
+        #Moving from going up to rotating
+        elif self.curDirection == UP and self.position[1] < self.curRow - 0.5:
+            if self.lastLinear == RIGHT:
+                self.SetRotate(False)
+            else 
+                self.SetRotate(True)
+
+        #Moving from rotating to the next desired direction
+        elif self.curDirection == ROTATE_CCW and self.rotation <= self.targetAngle:
+            self.SetForward()
+        elif self.curDirection == ROTATE_CW and self.rotation >= self.targetAngle:
+            self.SetForward()
+        
     '''
     # Make the robot run along the perimeter until we find the cable 
     def PerimeterSearch(self):
@@ -150,17 +162,23 @@ class Navigation:
                 self.SetRotate()
             elif self.curDirection == DOWN and self.position[1] > 6.5:
                 self.StopAllMotors()
-    '''
-
-    def TrackCable(self):
-
     
+    '''
     # Tells the robot to go forward after we've done a rotation
-    def SetForward(self):
-        if self.curRow % 2 == 0:
-            self.curDirection = RIGHT
+    def SetForward(self, targetDistance):
+        self.rotVelocity = STOP_ROTATION
+
+        if self.lastLinear == UP:
+            if self.curDirection == ROTATE_CCW:
+                self.curDirection = LEFT
+            else:
+                self.curDirection = RIGHT
         else:
-            self.curDirection = LEFT
+            self.curDirection = UP
+
+        targetX = self.position[0] + targetDistance *  cos(toRad(self.rotation))
+        targetY = self.position[1] + targetDistance * -sin(toRad(self.rotation))
+        self.targetPos = Vector( targetX, targetY )
 
         self.velocity = MOVE_FORWARD
         self.rotation = STOP_ROTATION
@@ -169,24 +187,31 @@ class Navigation:
     # Tells the robot to turn 90 degrees after it's gone all the way
     # across the board        
     def SetRotate(self, isCW):
-        self.curDirection = ROTATE
         self.velocity = STOP
 
+        self.lastLinear = self.curDirection
+
         if isCW:
+            self.curDirection = ROTATE_CW
+
             # target angle is ninty degrees from where we started
             self.targetAngle = self.rotation + 90.0
-            self.rotVelocity = ROTATE_CW
+            self.rotVelocity = ROTATE_SPEED
         else:
+            self.curDirection = ROTATE_CCW
+
             # target angle is ninty degrees from where we started
             self.targetAngle = self.rotation - 90.0
-            self.rotVelocity = ROTATE_CCW
-            
+            self.rotVelocity = -ROTATE_SPEED           
 
         self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
     def StopAllMotors(self):
         self.velocity = STOP
         self.rotVelocity = STOP_ROTATION
+
+    def toRad(angle):
+        return angle * PI / 180.0
     
 
 '''
@@ -253,7 +278,7 @@ class Navigation:
                         self.transform.position = Vector(6.5, self.transform.position[1])
             else:   
                 if(self.transform.position[1] < 0.5 or self.transform.position[1] > 6.5):
-                    newDir = Vector(100.0, 0.0) * (self.initialSearchDirection - 2)
+                        newDir = Vector(100.0, 0.0) * (self.initialSearchDirection - 2)
                     needNewMovementSent = True
                     if(self.transform.position[1] < 0.5):
                         self.transform.position = Vector(self.transform.position[0], 0.5)

@@ -19,7 +19,7 @@ reader = ACDetectorReader.ACDetectorReader(acDetectorPort)
 driveBoard = "/dev/ttyACM0"
 
 #Initialize navigation
-startPosition = Vector.Vector(0.5, 6.4999)#measured in feet
+startPosition = Vector.Vector(0.5, 6.5)#measured in feet
 startRotation = 0.0
 nav = Navigation.Navigation(startPosition, startRotation, driveBoard)
 
@@ -28,15 +28,14 @@ nav = Navigation.Navigation(startPosition, startRotation, driveBoard)
 #drive.SetMotors(Transform.Transform(Vector.Vector(0.0, 0.0), 050.0))
 
 # However long we have to map the whole thing
-duration = 180.0
+duration = 360.0
 
 try:
     #Start main loop
     while(1):
         # Update all sensor input
         reader.Update()
-        deltaTransform = movementFeedback.Update()
-        nav.Update(reader.GetSensorValue(), deltaTransform)
+        nav.Update(reader.GetSensorValue())
     
         if(reader.GetAge() > duration):
             break
