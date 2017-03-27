@@ -17,7 +17,7 @@ BOARD_HEIGHT = 7#feet
 STOP = Vector( 0, 0 )
 STOP_ROTATION = 0
 
-MOVE_FORWARD = Vector( 0, -100 )
+MOVE_FORWARD = Vector( 0, 100 )
 ROTATE_SPEED = 50
 
 class Navigation:
@@ -40,7 +40,8 @@ class Navigation:
 
         #initialization of the maze array
         self.maze = Maze.Maze(BOARD_WIDTH, BOARD_HEIGHT)
-       
+        
+        self.curDirection = RIGHT 
         ''' 
         self.currentMovement = Transform(Vector(0.0, 0.0), 0.0)
         self.initialSearchDirection = 0
@@ -64,13 +65,13 @@ class Navigation:
         # Map cable onto the LED Matrix
         self.maze.SendAcSensorData(self.position, acSensorData)
 
-        delta = self.feedback.Update()
+        delta = self.feedback.Update(self.rotation)
         newPosX = self.position[0] + delta[0][0]
         newPosY = self.position[1] + delta[0][1]
         self.position = Vector( newPosX, newPosY )
         self.rotation += delta[1]
     
-        print( "Cur Pos: ", self.position, ", Cur Rotation: ", self.rotation )
+        print( "Cur Pos: ", self.position, ", Cur Rotation: ", self.rotation, ", State: ", self.curDirection )
         #self.transform.position = self.transform.position + deltaTransform.position
         
         # Call the appropriate update function based on what algo
@@ -136,9 +137,9 @@ class Navigation:
                 self.SetRotate(True)
 
         #Moving from rotating to the next desired direction
-        elif self.curDirection == ROTATE_CCW and self.rotation <= self.targetAngle:
+        elif self.curDirection == ROTATE_CCW and self.rotation >= self.targetAngle:
             self.SetForward()
-        elif self.curDirection == ROTATE_CW and self.rotation >= self.targetAngle:
+        elif self.curDirection == ROTATE_CW and self.rotation <= self.targetAngle:
             self.SetForward()
         
     '''
@@ -169,7 +170,7 @@ class Navigation:
     
     '''
     # Tells the robot to go forward after we've done a rotation
-    def SetForward(self, targetDistance):
+    def SetForward(self):
         self.rotVelocity = STOP_ROTATION
 
         if self.lastLinear == UP:
@@ -180,12 +181,8 @@ class Navigation:
         else:
             self.curDirection = UP
 
-        targetX = self.position[0] + targetDistance *  cos(toRad(self.rotation))
-        targetY = self.position[1] + targetDistance * -sin(toRad(self.rotation))
-        self.targetPos = Vector( targetX, targetY )
-
         self.velocity = MOVE_FORWARD
-        self.rotation = STOP_ROTATION
+        self.rotVelocity = STOP_ROTATION
         self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
     # Tells the robot to turn 90 degrees after it's gone all the way
@@ -199,14 +196,14 @@ class Navigation:
             self.curDirection = ROTATE_CW
 
             # target angle is ninty degrees from where we started
-            self.targetAngle = self.rotation + 90.0
-            self.rotVelocity = ROTATE_SPEED
+            self.targetAngle = self.rotation - 90.0
+            self.rotVelocity = -ROTATE_SPEED
         else:
             self.curDirection = ROTATE_CCW
 
             # target angle is ninty degrees from where we started
-            self.targetAngle = self.rotation - 90.0
-            self.rotVelocity = -ROTATE_SPEED           
+            self.targetAngle = self.rotation + 90.0
+            self.rotVelocity = ROTATE_SPEED           
 
         self.feedback.SetDirection( self.velocity, self.rotVelocity )
 

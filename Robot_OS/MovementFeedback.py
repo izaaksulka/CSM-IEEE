@@ -3,7 +3,7 @@ from Vector import Vector
 #import pygame
 import time
 import Drive
-from math import cos, sin
+from math import cos, sin, pi
 
 # Number of reading per second
 POLL_RATE = 10
@@ -11,7 +11,7 @@ DELTA_TIME = 1 / float(POLL_RATE)
 
 # Convert mouse distance to feet    
 DISTANCE_SCALE = 0.00857
-ROTATION_SCALE = 0.6
+ROTATION_SCALE = 0.1
 '''
 THETA = 60.0
 
@@ -54,7 +54,7 @@ class MovementFeedback:
         self.rotVelocity = rotVelocity
 
     #returns movement value
-    def Update(self):
+    def Update(self, rotation):
             
         # For the moment it's dead reckoning,
         # but in a normal situation we would
@@ -66,8 +66,10 @@ class MovementFeedback:
 
             deltaTime = self.curPoll - self.lastPoll
             
-            distanceTraveled = Vector( self.velocity.inner(Vector(sin(self.rotation), cos(self.rotation)))  * deltaTime * DISTANCE_SCALE, 
-                                       self.velocity.inner(Vector(cos(self.rotation), -sin(self.rotation))) * deltaTime * DISTANCE_SCALE )
+            radRotation = ToRad(rotation)
+
+            distanceTraveled = Vector( self.velocity.inner(Vector(sin(radRotation), cos(radRotation)))  * deltaTime * DISTANCE_SCALE, 
+                                       self.velocity.inner(Vector(cos(radRotation), -sin(radRotation))) * deltaTime * DISTANCE_SCALE )
 
             distanceRotated = self.rotVelocity * deltaTime * ROTATION_SCALE
 
@@ -78,6 +80,9 @@ class MovementFeedback:
         # This is weird, but if we're not getting the reading yet, 
         # then we're just reporting no change
         return ( Vector(0, 0), 0 )
+
+def ToRad(angle):
+    return angle * pi / 180
 
         '''
         deltaPos = Vector( 0, 0 )
