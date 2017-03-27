@@ -4,7 +4,7 @@ import time
 START, FOAM, WIRE, VOID, END, OBSTACLE, UNKNOWN = range(7)
 OFF, RED, BLUE, YELLOW = range(4)
 #AC_WIRE_TIME_THRESHOLD = 0.2
-RATIO_THRESHOLD = 0.5
+RATIO_THRESHOLD = 0.9
 class Tile:
     def __init__(self, x, y):
         self.x = x

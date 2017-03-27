@@ -135,6 +135,7 @@ class Navigation:
         #if it is positioned in the top right corner and is done scanning
         if self.curDirection == ROTATE_CCW and self.curRow == 1:
             self.StopAllMotors()
+            self.maze.Connect()
             self.state = OPEN_CACHE
             return
 

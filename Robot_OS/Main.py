@@ -17,7 +17,7 @@ reader = ACDetectorReader.ACDetectorReader(acDetectorPort)
 #initialize Drive
 #drive = Drive.Drive("/dev/ttyACM0")
 driveBoard = "/dev/ttyACM0"
-mapBoard = "/dev/ttyUSB0"
+mapBoard = "/dev/ttyACM1"
 
 #Initialize navigation
 startPosition = Vector.Vector(0.5, 6.5)#measured in feet

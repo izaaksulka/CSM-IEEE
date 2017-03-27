@@ -42,7 +42,7 @@ class Maze:
         y = int(position[1])
         
         if(self.tiles[x][y].UpdateACSensorData(data)):#returns true of state changes
-           #self.Output(x, y)
+            #self.Output(x, y)
             self.PrintMap()
         
     def Output(self, x, y):
@@ -63,10 +63,22 @@ class Maze:
         lasty = int(self.lastPosition[1])
         '''
     def PrintMap(self):
-        output = ""
+        #output = ""
         for i in range( self.width ):
             for j in range( self.height ):
-                output += "%d %d %d " % (i, j, self.tiles[i][j].GetColor())
+                #output += "%d %d %d\n" % (i, j, self.tiles[i][j].GetColor())
+                self.Output( i, j )
 
-        output += "\n"
-        self.ser.write( output.encode( encoding = "ascii" ) )
+        #output += "\n"
+        #self.ser.write( output.encode( encoding = "ascii" ) )
+
+    def Connect(self):
+        print( "Hello world!" )    
+        
+
+
+
+
+
+
+
