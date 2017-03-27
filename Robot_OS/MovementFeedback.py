@@ -84,7 +84,7 @@ class MovementFeedback:
 def ToRad(angle):
     return angle * pi / 180
 
-        '''
+'''
         deltaPos = Vector( 0, 0 )
         deltaRot = 0.0;
         # Get the mouse change from pygame
@@ -111,7 +111,7 @@ def ToRad(angle):
                         deltaRot = self.RotationFromMouse(deltaM);
         
         return Transform.Transform( deltaPos, deltaRot)
-        '''
+'''
 '''
     def GetDeltaPos(self):
         movement = self.driver.bodyVel * 0.000001#here, the feedback unit just
