@@ -7,6 +7,8 @@ from math import pi, cos, sin
 from Drive import Drive
 from MovementFeedback import MovementFeedback
 
+import time
+
 #BEGIN_SEARCH, SEARCH_PERIMETER, FOLLOW_CABLE, OPEN_CACHE, RETURN_HOME = range(5)
 BEGIN_SEARCH, SCAN_BOARD, OPEN_CACHE, RETURN_HOME = range(4)
 RIGHT, LEFT, UP, ROTATE_CW, ROTATE_CCW = range(5)

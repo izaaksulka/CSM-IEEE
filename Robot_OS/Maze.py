@@ -1,4 +1,4 @@
-import Tile
+from Tile import Tile
 import Vector
 import serial
 import time
@@ -21,6 +21,16 @@ class Maze:
         #print("creating maze with x = " + str(x) + " and y = " + str(y))
         self.width = x
         self.height = y
+        
+        self.tiles = [] 
+        for i in range(self.height):
+            row = []
+            for j in range(self.width):
+                row.append( Tile(i, j) ) 
+            self.tiles.append( row ) 
+        #self.tiles = [ [Tile() for j in range(y)] for i in range(x)]
+        
+        ''' 
         self.tiles = [None] * x
         i = 0
         while (i < x):
@@ -28,9 +38,10 @@ class Maze:
             self.tiles[i] = [None] * y
             while(j < y):
                 
-                self.tiles[i][j] = Tile.Tile(i, j)
+                self.tiles[i][j] = Tile(i, j)
                 j += 1
             i += 1
+        '''
         #self.lastPosition = Vector.Vector(0, 6)
 
         self.tiles[0][6].SetState(0)
@@ -48,11 +59,11 @@ class Maze:
     def Output(self, x, y):
         
         if x >= 0 and x < self.width and y >= 0 and y < self.height:
-            output = "-1 %d %d %d\n" % ( x, y, self.tiles[x][y].GetColor() )
+            output = "-1 %d %d %d\n" % ( y, x, self.tiles[x][y].GetColor() )
             print( "To Map: ", output ) 
             self.ser.write( output.encode( encoding = "ascii" ) )
         else:
-            print( "%d %d %d is out of range!" % ( x, y, self.tiles[x][y].GetColor() ) )        
+            print( "%d %d %d is out of range!" % ( y, x, self.tiles[x][y].GetColor() ) )        
         '''
         if(position != self.lastPosition):
             self.tiles[lastx][lasty].UpdateACSensorData(False)
