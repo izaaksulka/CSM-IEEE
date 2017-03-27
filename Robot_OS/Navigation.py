@@ -95,7 +95,7 @@ class Navigation:
         self.velocity = Vector( 0, 100 )
         self.rotVelocity = 0.0
 
-        self.SendNewMovement()
+        self.drive.SetMotors( self.velocity, self.rotVelocity )
         self.state = SCAN_BOARD
 
         self.curRow = int( self.position[1] )
