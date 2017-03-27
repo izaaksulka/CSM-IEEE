@@ -26,6 +26,7 @@
 
 #include "Colorduino.h"
 
+enum Color { OFF, RED, BLUE, YELLOW };
 
 unsigned char plasma[ColorduinoScreenWidth][ColorduinoScreenHeight];
 long paletteShift;
@@ -145,14 +146,15 @@ void loop() {
      }
     ColorRGB outRGB = { 0, 0, 0 };
     switch( changeTile[2] ) {
-      case 1:
-        outRGB.g = 255;
-        break;
-      case 2:
+      case RED:
         outRGB.r = 255;
         break;
-      case 3:
+      case BLUE:
         outRGB.b = 255;
+        break;
+      case YELLOW:
+        outRGB.r = 255;
+        outRGB.g = 255;
         break;
     }
 

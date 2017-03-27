@@ -17,8 +17,8 @@ BOARD_HEIGHT = 7#feet
 STOP = Vector( 0, 0 )
 STOP_ROTATION = 0
 
-MOVE_FORWARD = Vector( 0, 100 )
-ROTATE_SPEED = 50
+MOVE_FORWARD = Vector( 0, 150 )
+ROTATE_SPEED = 75
 
 class Navigation:
     def __init__(self, startPosition, startRotation, driveBoard):

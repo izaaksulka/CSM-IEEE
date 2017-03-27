@@ -14,7 +14,7 @@ class Drive:
         self.wheelR = 1.125
         
         # Wheel baseline (distance from the center of the chassis to the wheel)
-        self.b = 5.5 
+        self.b = 1 
 
         # The unit direction vectors of the wheels
         self.rearDir = Vector( 1, 0 ) 

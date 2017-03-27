@@ -10,8 +10,8 @@ POLL_RATE = 10
 DELTA_TIME = 1 / float(POLL_RATE)
 
 # Convert mouse distance to feet    
-DISTANCE_SCALE = 0.00857
-ROTATION_SCALE = 0.1
+DISTANCE_SCALE = 0.0067
+ROTATION_SCALE = 0.900
 '''
 THETA = 60.0
 
