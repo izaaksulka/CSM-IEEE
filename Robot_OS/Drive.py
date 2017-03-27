@@ -41,9 +41,8 @@ class Drive:
         self.bodyVel = velocity * DRIVE_SCALE
         self.bodyRot = rotVelocity * DRIVE_SCALE
         '''
-        self.bodyVel = velocity
+        self.bodyVel = Vector( velocity[0], -velocity[1] )
         self.bodyRot = rotVelocity
-
         '''
         nonZeroTransformComponents = 0
         if(self.bodyVel == Vector(0, 0)):

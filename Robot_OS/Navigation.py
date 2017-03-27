@@ -80,6 +80,8 @@ class Navigation:
             self.UpdateStartup()
         elif self.state == SCAN_BOARD:
             self.ScanBoard()
+        elif self.state == OPEN_CACHE:
+            print( "Donne!" )
         '''
         elif self.state == SEARCH_PERIMETER:
             self.PerimeterSearch()
@@ -131,6 +133,7 @@ class Navigation:
 
         #Moving from going up to rotating
         elif self.curDirection == UP and self.position[1] < self.curRow - 0.5:
+            self.curRow -= 1
             if self.lastLinear == RIGHT:
                 self.SetRotate(False)
             else: 
@@ -141,34 +144,13 @@ class Navigation:
             self.SetForward()
         elif self.curDirection == ROTATE_CW and self.rotation <= self.targetAngle:
             self.SetForward()
+
+
+    #def GoToCache(self):
         
-    '''
-    # Make the robot run along the perimeter until we find the cable 
-    def PerimeterSearch(self):
-        #print("Searching perimeter for current...")
 
-        delta = self.feedback.Update()
-        self.position += delta[0]
-        self.rotation += delta[1]
 
-        if self.foundCable == True:
-            self.state = FOLLOW_CABLE
 
-        else:
-            if self.curDirection == ROTATE and self.rotation >= self.targetAngle:
-                self.SetForward()                    
-            # Once we hit the end of the board,
-            # tell the robot to rotate
-            elif self.curDirection == RIGHT and self.position[0] > 6.5:
-                self.SetRotate()
-            elif self.curDirection == UP and self.position[1] < 0.5:
-                self.SetRotate()
-            elif self.curDirection == LEFT and self.position[0] < 0.5:
-                self.SetRotate()
-            elif self.curDirection == DOWN and self.position[1] > 6.5:
-                self.StopAllMotors()
-    
-    '''
     # Tells the robot to go forward after we've done a rotation
     def SetForward(self):
         self.rotVelocity = STOP_ROTATION
@@ -292,4 +274,33 @@ class Navigation:
                 self.initialSearchDirection += 1
                 if(self.initialSearchDirection > 3):#loop back to zero if gone around every side.
                     self.initialSearchDirection = 0
+'''
+
+        
+'''
+    # Make the robot run along the perimeter until we find the cable 
+    def PerimeterSearch(self):
+        #print("Searching perimeter for current...")
+
+        delta = self.feedback.Update()
+        self.position += delta[0]
+        self.rotation += delta[1]
+
+        if self.foundCable == True:
+            self.state = FOLLOW_CABLE
+
+        else:
+            if self.curDirection == ROTATE and self.rotation >= self.targetAngle:
+                self.SetForward()                    
+            # Once we hit the end of the board,
+            # tell the robot to rotate
+            elif self.curDirection == RIGHT and self.position[0] > 6.5:
+                self.SetRotate()
+            elif self.curDirection == UP and self.position[1] < 0.5:
+                self.SetRotate()
+            elif self.curDirection == LEFT and self.position[0] < 0.5:
+                self.SetRotate()
+            elif self.curDirection == DOWN and self.position[1] > 6.5:
+                self.StopAllMotors()
+    
 '''
