@@ -10,10 +10,10 @@
 
 #define stp 2
 #define dir 3
-#define MS1 5
-#define MS2 6
-#define MS3 7
-#define EN  4
+#define MS1 4
+#define MS2 5
+#define MS3 6
+#define EN  7
 
 //Declare variables for functions
 int motorType;
