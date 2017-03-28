@@ -86,7 +86,6 @@ class Navigation:
         elif self.state == SCAN_BOARD:
             self.ScanBoard( ACSensorData )
         elif self.state == OPEN_CACHE:
-            print( "Donne!" )
             self.maze.PrintMap()
         '''
         elif self.state == SEARCH_PERIMETER:
@@ -214,10 +213,23 @@ class Navigation:
         elif self.curDirection == ROTATE_CW and self.rotation <= self.targetAngle:
             self.SetForward()
 
+    def GoToCache(self):
+        if not self.connectedMaze:
+            # Solve the missing gaps in the maze, 
+            # namely the cache locations
+            # Print out the map one last time
+            cacheLocations = self.maze.Connect()
+            self.maze.PrintMap()
+            self.connectedMaze = True
 
-    #def GoToCache(self):
-        
-
+            self.targetCaches = []
+            
+            if len( cacheLocations ) == 4:
+                # TODO: Tell robot to check all caches
+            elif len( cacheLocations ) == 3:
+                # TODO: Tell robot to check the corner wire
+            else:
+                # TODO: GOTO cache
 
 
     # Tells the robot to go forward after we've done a rotation
