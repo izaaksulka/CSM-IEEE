@@ -96,11 +96,12 @@ class Navigation:
                 self.paused = True
                 self.startPause = time.time()
                 self.targetPos = ( self.targetPos[0] - 1, self.targetPos[1] )
+        '''
         else:
             self.velocity = MOVE_FORWARD
             self.rotVelocity = STOP_ROTATION
             #self.feedback.SetDirection( self.velocity, self.rotVelocity )
-
+        '''
     def ScanBoard(self, ACSensorData):
         #print("Searching perimeter for current...")
 
