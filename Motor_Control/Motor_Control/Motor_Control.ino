@@ -50,7 +50,8 @@ void loop() {
     if (Serial.available() > 0) {
 
         motorType = Serial.parseInt();
-
+        while( motorType != STEPPER && motorType != HOLONOMIC )
+            motorType = Serial.parseInt();
 
         if (motorType == HOLONOMIC){
 

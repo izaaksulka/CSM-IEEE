@@ -10,7 +10,7 @@ OFFSET = 40.0
 class Drive:
     def __init__(self, comPort):
         # Movement mode is either translate or rotate
-        self.movementMode = NO_MOVEMENT
+        #self.movementMode = NO_MOVEMENT
         # The radius of the drive wheels
         self.wheelR = 1.125
         
@@ -37,7 +37,7 @@ class Drive:
         self.bodyVel = Vector( 0, 1 ) 
 
     def SetMotors(self, velocity, rotVelocity):
-        print( "Ding!" )
+        print( "Ding!", " Velocity = ", velocity, " rotVelocity = ", rotVelocity )
 
         self.bodyVel = Vector( velocity[0], -velocity[1] )
         self.bodyRot = rotVelocity
@@ -50,9 +50,10 @@ class Drive:
         output = "1 %d %d %d\n" % (int(round(rearOut)),
                                    int(round(frontLOut)), 
                                    int(round(frontROut)))
-
+    
+        print( "Serial outut: ", output )
         self.ser.write( output.encode( encoding = "ascii" ) )
      
-     def Cleanup(self):
+    def Cleanup(self):
         self.SetMotors( Vector(0,0), 0 )
         self.ser.close()

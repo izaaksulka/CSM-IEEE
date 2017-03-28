@@ -22,6 +22,8 @@ lastTime = time.time()
 POLL_RATE = 1.0
 DELTA_TIME = 1/POLL_RATE 
 
+GPIO.setmode(GPIO.BOARD)
+
 try:
     #Start main loop
     while True:

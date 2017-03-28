@@ -52,7 +52,7 @@ class Maze:
             print( "%d %d %d is out of range!" % ( y, x, self.tiles[x][y].GetColor() ) )        
         
 
-        def PrintMap(self):
+    def PrintMap(self):
         output = ""
         for i in range( self.width ):
             for j in range( self.height ):

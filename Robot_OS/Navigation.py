@@ -12,7 +12,7 @@ from math import pi, cos, sin
 import time
 
 # SERIAL PORTS
-DRIVE_PORT = "/dev/ttyACM0"
+DRIVE_PORT = "/dev/ttyACM1"
 MAP_PORT = "/dev/ttyUSB0"
 
 # RPi DIGITAL PORTS
@@ -24,14 +24,14 @@ AC_DETECTOR_PORT = 36
 ''' Probably deprecated
 PAUSE_DURATION = 2.0 
 '''
-ERROR = 0.05
+ERROR = 0.5
 
-SCAN_BOARD, OPEN_CACHE, RETURN_HOME = range(4)
-READY, PAUSED, TRANSLATING, ROTATING, FINISHED = range(4)
+SCAN_BOARD, OPEN_CACHE, RETURN_HOME = range(3)
+READY, PAUSED, TRANSLATING, ROTATING, FINISHED = range(5)
 
 # Dimensions in feet
-BOARD_WIDTH = 7.0
-BOARD_HEIGHT = 7.0
+BOARD_WIDTH = 7
+BOARD_HEIGHT = 7
 
 # Pre-defined move speeds
 STOP = Vector( 0, 0 )
@@ -64,7 +64,7 @@ class Navigation:
 
         self.position = startPosition
         self.rotation = startRotation
-        self.rotating = False
+        self.isRotating = False
 
         self.velocity = MOVE_FORWARD
         self.rotVelocity = STOP_ROTATION
@@ -78,8 +78,8 @@ class Navigation:
         self.moveState = READY
 
         self.moveQueue = deque( [] )
-        self.PopulateQueue()
-  
+        #self.PopulateQueue()
+        self.counter = 0
         ''' I think all this is deprecated
         self.curDirection = RIGHT
         self.curRow = 6 
@@ -95,13 +95,13 @@ class Navigation:
             if self.curDirection == ROTATE_CCW or self.curDirection == ROTATE_CW:           
                 isRotating = True
             '''
-            dr, dAngle = self.feedback.Update(self.rotation, isRotating)
-            newPosX = self.position[0] + delta[0][0]
-            newPosY = self.position[1] + delta[0][1]
+            dr, dAngle = self.feedback.Update(self.rotation, self.isRotating)
+            newPosX = self.position[0] + dr[0]
+            newPosY = self.position[1] + dr[1]
             self.position = Vector( newPosX, newPosY )
-            self.rotation += delta[1]
+            self.rotation += dAngle
         
-            #print( "Cur Pos: ", self.position, ", Cur Rotation: ", self.rotation, ", State: ", self.curDirection )
+
             
             # If we've just started the program
             # or finished all of the instructions from
@@ -116,13 +116,21 @@ class Navigation:
                 elif self.nextState == OPEN_CACHE:
                     self.maze.PrintMap()
                     # Set next state here
-
-            if self.moveState == TRANSLATING and
-              (self.position - self.targetPos).norm() < ERROR:
+           # self.
+            self.counter += 1      
+            if self.counter == 2500:
+                self.counter = 0
+                print("state: ", self.moveState) 
+                print("Position ", self.position,  " Cur Rotation: ", self.rotation, "MoveState: " , self.moveState )
+                print("target angle = ", self.targetAngle)
+             # print( "Error: ", (self.position - self.targetPos).norm(), "Threshold: ", ERROR )
+            #if(self.moveState == ROTATING):
+            #    print("rotating")
+            if self.moveState == TRANSLATING and (self.position - self.targetPos).norm() < ERROR:
                 self.NextCommand()
-
-            elif self.moveState == ROTATING and
-               abs( self.rotation - self.targetAngle ) < ERROR:
+                
+            elif self.moveState == ROTATING and abs( self.rotation - self.targetAngle ) < ERROR:
+                
                 self.NextCommand()
 
             elif self.moveState == PAUSED and time.time() > self.targetTime:
@@ -135,7 +143,7 @@ class Navigation:
     # Dequeues the next command and sets motors accordingly
     def NextCommand(self):
         nextCommand = self.moveQueue.popleft()
-
+        print("Next command type: ", nextCommand[0])
         if nextCommand[0] == "FWD":
             self.SetForward( nextCommand[1] )
         elif nextCommand[0] == "ROT":
@@ -164,10 +172,11 @@ class Navigation:
         self.rotVelocity = STOP_ROTATION
         self.velocity = MOVE_FORWARD
         self.moveState = TRANSLATING
+        self.isRotating = False
 
         rotRad = ToRad( self.rotation )
-        self.targetPos = ( self.position[0] * distance *  cos( rotRad ),
-                           self.position[1] * distance * -sin( rotRad ) )
+        self.targetPos = ( self.position[0] + distance *  cos( rotRad ),
+                           self.position[1] + distance * -sin( rotRad ) )
 
         # TODO: Set the motors somewhere
 
@@ -176,14 +185,15 @@ class Navigation:
         self.velocity = STOP
         self.rotVelocity = ROTATE_SPEED * ( -1 if deltaAngle < 0 else 1 )
         self.moveState = ROTATING
-
+        self.isRotating = True
+        self.targetAngle = self.rotation + deltaAngle
         # TODO: Set the motors somewhere
 
     def SetPause(self, duration):
         self.velocity = STOP
         self.rotVelocity = STOP_ROTATION
         self.moveState = PAUSED
-
+        self.isRotating = False
         self.targetTime = time.time() + duration
 
         # TODO: Set the motors somewhere
@@ -203,5 +213,5 @@ class Navigation:
         self.maze.Cleanup()
 
 
-    def ToRad(angle):
-        return angle * pi / 180.0
+def ToRad(angle):
+    return angle * pi / 180.0

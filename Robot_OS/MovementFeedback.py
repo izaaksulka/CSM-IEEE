@@ -11,12 +11,14 @@ DELTA_TIME = 1 / POLL_RATE
 
 # Convert mouse distance to feet    
 DISTANCE_SCALE = 0.36590066804 / 680 #ft/rot / ticks/rot
-ROTATION_SCALE = 0.900 #degrees per tick
-
+#ROTATION_SCALE = -0.900 #degrees per tick.  changed to negative because feedback was backwards
+ROTATION_SCALE = -0.09
 
 class MovementFeedback:
 
     def __init__(self, portA, portB):
+
+        GPIO.setmode(GPIO.BOARD)        
 
         self.portA = portA
         self.portB = portB
@@ -49,30 +51,30 @@ class MovementFeedback:
                 self.counter += 1
         #print( "Counter: ", self.counter ) 
         self.ALastState = aState 
-            
+                    
         #if we have passed the update threshold
-        if time.time() - self.lastPoll > DELTA_TIME:
+        #if time.time() - self.lastPoll > DELTA_TIME:
             #print( "Distance: ", self.counter, "Delta time: ", time.time() - self.lastPoll )
             #print( "Times counted: ", self.timesPolled )
-            self.timesPolled = 0
-            self.lastPoll = time.time()
+        self.timesPolled = 0
+        self.lastPoll = time.time()
 
-            distChange = Vector( 0, 0 )
-            rotChange  = 0
+        distChange = Vector( 0, 0 )
+        rotChange  = 0
 
             
             #rotating math
-            if isRotating:
-                rotChange = self.counter * ROTATION_SCALE
+        if isRotating:
+            rotChange = self.counter * ROTATION_SCALE
             #translating math
-            else:
-                delX = self.counter *  cos(ToRad(rotation)) * DISTANCE_SCALE
-                delY = self.counter * -sin(ToRad(rotation)) * DISTANCE_SCALE
-                distChange = Vector( delX, delY )
+        else:
+            delX = self.counter *  cos(ToRad(rotation)) * DISTANCE_SCALE
+            delY = self.counter * -sin(ToRad(rotation)) * DISTANCE_SCALE
+            distChange = Vector( delX, delY )
     
-            self.counter = 0
+        self.counter = 0
 
-            return ( distChange, rotChange )
+        return ( distChange, rotChange )
         
         #return nothing if enough time hasn't passed
         return ( Vector( 0, 0 ), 0 )
