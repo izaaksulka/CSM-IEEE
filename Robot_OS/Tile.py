@@ -63,3 +63,6 @@ class Tile:
 
     def GetState(self):
         return self.state
+    def IsWire(self):
+        return self.state == WIRE
+

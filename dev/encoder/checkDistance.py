@@ -8,7 +8,7 @@ DELTA_TIME = 1 / POLL_RATE
 ENC_A = 15
 ENC_B = 16
 
-GPIO.setMode( GPIO.BOARD )
+GPIO.setmode( GPIO.BOARD )
 GPIO.setup( ENC_A, GPIO.IN, pull_up_down = GPIO.PUD_DOWN )
 GPIO.setup( ENC_B, GPIO.IN, pull_up_down = GPIO.PUD_DOWN )
 
