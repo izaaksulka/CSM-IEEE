@@ -230,8 +230,21 @@ class Navigation:
                 # TODO: Tell robot to check the corner wire
             else:
                 # TODO: GOTO cache
-
-
+   
+    def GoHome(self):
+        #find the angle we need to go at to get back to B6
+        vectorToB6 = (1.5 - position[0], 5.5 - position[1]
+        targetAngle = math.atan(
+        return
+    #returns the angle the robot needs to face in order to go in the direction a vector points
+    #returns angle from 0 to 360
+    def AngleOfVector(self, v):
+        return 2 * math.pi * AngleOfVectorRadians(v)#find in radians and convert. done this way because python math wants radians but we want degrees
+    def AngleOfVectorRadians(self, v): 
+        if v[0] > 0:#if x of vector is positive, return atan of y / x
+            return atan(v[1] / float(v[0]))
+        elif v[0] < 0:
+            return atan(v[1] / float(v[0])) + math.pi / 2.0
     # Tells the robot to go forward after we've done a rotation
     def SetForward(self):
         self.rotVelocity = STOP_ROTATION
