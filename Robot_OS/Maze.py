@@ -1,48 +1,30 @@
-from Tile import Tile
+from Tile import Tile, WIRE
 import Vector
 import serial
 import time
-from Tile import WIRE
 
 class Maze:
     def __init__(self, x, y, comPort):
    
         self.ser = serial.Serial( comPort, 9600 )
         
+        # Wait for the serial to connect
         initBit = self.ser.inWaiting()
         #t0 = time.clock()
-        
-        # Just wait for the serial to connect,
-        # That is, wait until we see something in the input buffer
         while self.ser.inWaiting() == initBit:
-            print( "", end = '' ) # Literally here to do nothing
-
+            print( "", end = '' )
         #self.loadTime = time.clock() - t0
 
-        #print("creating maze with x = " + str(x) + " and y = " + str(y))
+        # Generate the map to be written to
         self.width = x
-        self.height = y
-        
+        self.height = y  
         self.tiles = [] 
         for i in range(self.height):
             row = []
             for j in range(self.width):
                 row.append( Tile(i, j) ) 
             self.tiles.append( row ) 
-        #self.tiles = [ [Tile() for j in range(y)] for i in range(x)]
         
-        ''' 
-        self.tiles = [None] * x
-        i = 0
-        while (i < x):
-            j = 0
-            self.tiles[i] = [None] * y
-            while(j < y):
-                
-                self.tiles[i][j] = Tile(i, j)
-                j += 1
-            i += 1
-        '''
         #self.lastPosition = Vector.Vector(0, 6)
 
         self.tiles[0][6].SetState(0)
