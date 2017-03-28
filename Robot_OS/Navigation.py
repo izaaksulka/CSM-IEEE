@@ -12,7 +12,7 @@ from math import pi, cos, sin
 import time
 
 # SERIAL PORTS
-DRIVE_PORT = "/dev/ttyACM1"
+DRIVE_PORT = "/dev/ttyACM0"
 MAP_PORT = "/dev/ttyUSB0"
 
 # RPi DIGITAL PORTS
