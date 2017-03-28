@@ -24,13 +24,13 @@ MOVE_FORWARD = Vector( 0, 200 )
 ROTATE_SPEED = 100
 
 class Navigation:
-    def __init__(self, startPosition, startRotation, driveBoard, mapBoard):
+    def __init__(self, startPosition, startRotation, driveBoard, mapBoard, encoderA, encoderB):
        
         self.position = startPosition
         self.rotation = startRotation
 
-        self.velocity = Vector( 0, 0 )
-        self.rotVelocity = 0
+        self.velocity = MOVE_FORWARD
+        self.rotVelocity = STOP_ROTATION
     
         # The current algorithm the robot is running
         self.state = BEGIN_SEARCH
@@ -38,7 +38,7 @@ class Navigation:
         # Initialize drive 
         self.drive = Drive( driveBoard )
 
-        self.feedback = MovementFeedback()
+        self.feedback = MovementFeedback( encoderA, encoderB )
         #self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
         #initialization of the maze array
@@ -48,28 +48,13 @@ class Navigation:
         self.curRow = 6 
         
         self.rotating = False
-        ''' 
-        self.currentMovement = Transform(Vector(0.0, 0.0), 0.0)
-        self.initialSearchDirection = 0
-        self.transform = Transform(startPosition, startRotation)
-
-        self.driver = newDriver
-        '''
-
+    
+        self.drive.SetMotors( self.velocity, self.rotVelocity )
         # For determining the printout rate 
         #self.updateCounter = 0
-        '''
-        # For the zig-zag algorithm
-        self.zigZagDirection = 1
-        self.zigZagVerticalMoveTarget = startPosition[1]
-        self.zigZagInVerticalMovement = False
-        '''
+     
     def Update(self, ACSensorData):
         
-        '''
-        # Map cable onto the LED Matrix
-        self.maze.SendAcSensorData(self.position, ACSensorData)
-        '''
         isRotating = False
         if self.curDirection == ROTATE_CCW or self.curDirection == ROTATE_CW:           isRotating = True
  
@@ -80,7 +65,6 @@ class Navigation:
         self.rotation += delta[1]
     
         #print( "Cur Pos: ", self.position, ", Cur Rotation: ", self.rotation, ", State: ", self.curDirection )
-        #self.transform.position = self.transform.position + deltaTransform.position
         
         # Call the appropriate update function based on what algo
         # we're running right now
@@ -90,22 +74,8 @@ class Navigation:
             self.ScanBoard( ACSensorData )
         elif self.state == OPEN_CACHE:
             self.maze.PrintMap()
-        '''
-        elif self.state == SEARCH_PERIMETER:
-            self.PerimeterSearch()
-        elif self.state == FOLLOW_CABLE:
-            self.TrackCable()
-        '''
         
         # Tell the chassis what to do now that we've figure that out
-        self.drive.SetMotors( self.velocity, self.rotVelocity )
-
-        '''
-        # Print out where we're at right now
-        self.updateCounter += 1
-        if(self.updateCounter % 1000 == 0):
-            print("Transform => " + self.transform.ThoString())
-        '''
 
     # Start the robot off by making it move forward
     def UpdateStartup(self):
@@ -130,11 +100,6 @@ class Navigation:
             self.velocity = MOVE_FORWARD
             self.rotVelocity = STOP_ROTATION
             #self.feedback.SetDirection( self.velocity, self.rotVelocity )
-
-        '''
-        self.lastDirection = RIGHT
-        #self.feedback.SetDirection( self.velocity, self.rotation )
-        '''
 
     def ScanBoard(self, ACSensorData):
         #print("Searching perimeter for current...")
@@ -228,16 +193,19 @@ class Navigation:
             self.targetCaches = []
             
             if len( cacheLocations ) == 4:
+                print( "You want this cake?" )
                 # TODO: Tell robot to check all caches
             elif len( cacheLocations ) == 3:
+                print( "I want that cake" )
                 # TODO: Tell robot to check the corner wire
             else:
+                print( "The cake is a lie" ) 
                 # TODO: GOTO cache
    
     def GoHome(self):
         #find the angle we need to go at to get back to B6
-        vectorToB6 = (1.5 - position[0], 5.5 - position[1]
-        targetAngle = math.atan(
+        vectorToB6 = (1.5 - position[0], 5.5 - position[1])
+        #targetAngle = math.atan()
         return
     #returns the angle the robot needs to face in order to go in the direction a vector points
     #returns angle from 0 to 360
@@ -266,6 +234,7 @@ class Navigation:
         self.velocity = MOVE_FORWARD
         self.rotVelocity = STOP_ROTATION
         #self.feedback.SetDirection( self.velocity, self.rotVelocity )
+        self.drive.SetMotors( self.velocity, self.rotVelocity )
 
     # Tells the robot to turn 90 degrees after it's gone all the way
     # across the board        
@@ -283,6 +252,7 @@ class Navigation:
             self.curDirection = ROTATE_CCW
             self.rotVelocity = ROTATE_SPEED           
 
+        self.drive.SetMotors( self.velocity, self.rotVelocity )
         #self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
     def StopAllMotors(self):

@@ -48,7 +48,7 @@ class Maze:
         self.tiles[0][6].SetState(0)
         #self.Output( 0, 6 )  
         self.PrintMap()
-        self.GetEnds()        
+        #self.GetEnds()        
     def SendAcSensorData(self, position, data):
         x = int(position[0])
         y = int(position[1])
@@ -58,7 +58,6 @@ class Maze:
             self.PrintMap()
         
     def Output(self, x, y):
-        
         if x >= 0 and x < self.width and y >= 0 and y < self.height:
             output = "-1 %d %d %d\n" % ( y, x, self.tiles[x][y].GetColor() )
             #print( "To Map: ", output ) 
@@ -75,14 +74,14 @@ class Maze:
         lasty = int(self.lastPosition[1])
         '''
     def PrintMap(self):
-        #output = ""
+        output = ""
         for i in range( self.width ):
             for j in range( self.height ):
-                #output += "%d %d %d\n" % (i, j, self.tiles[i][j].GetColor())
-                self.Output( i, j )
+                output += "-1 %d %d %d\n" % (i, j, self.tiles[i][j].GetColor())
+                #self.Output( i, j )
 
         #output += "\n"
-        #self.ser.write( output.encode( encoding = "ascii" ) )
+        self.ser.write( output.encode( encoding = "ascii" ) )
     def GetEnds(self):
         ends = self.Connect()
         if len(ends) < 2:
@@ -101,10 +100,10 @@ class Maze:
         for i in range(1, 6):
             #top row
             if (self.tiles[i][1].IsWire()):#Across the top
-                if GetAdjWireCount(i, 1) == 1
+                if GetAdjWireCount(i, 1) == 1:
                     ends.append(i, 0)
             if (self.tiles[i][5].IsWire()):#Across the bottom
-                if GetAdjWireCount(i, 5) == 1
+                if GetAdjWireCount(i, 5) == 1:
                     ends.append(i, 6)
             if (self.tiles[1][i].IsWire()):#Down the left side
                 if GetAdjWireCount(1, i) == 1:

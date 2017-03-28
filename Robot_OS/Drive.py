@@ -36,7 +36,7 @@ class Drive:
         self.bodyVel = Vector( 0, 1 ) 
 
     def SetMotors(self, velocity, rotVelocity):
-        
+        print( "Ding!" )
         ''' We got rid of the drive scale at the moment
         self.bodyVel = velocity * DRIVE_SCALE
         self.bodyRot = rotVelocity * DRIVE_SCALE

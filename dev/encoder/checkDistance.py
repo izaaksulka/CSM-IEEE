@@ -2,7 +2,7 @@
 import RPi.GPIO as GPIO
 import time
 
-POLL_RATE = 1000.0
+POLL_RATE = 10.0
 DELTA_TIME = 1 / POLL_RATE
 
 ENC_A = 15
@@ -23,15 +23,17 @@ try:
         aState = GPIO.input( ENC_A )
         bState = GPIO.input( ENC_B )
 
-        if time.time() - lastPoll > DELTA_TIME:
-            if aState != aLastState:
-                if bState != aState:
-                    counter += 1
-                else:
-                    counter -= 1
-
-                print( counter )
+        if aState != aLastState:
+            if bState != aState:
+                counter -= 1
+            else:
+                counter += 1
         aLastState = aState
+
+        if time.time() - lastPoll > DELTA_TIME:
+            print( "Distance: ", counter, "Delta time: ", time.time() - lastPoll )
+            lastPoll = time.time()
+            counter = 0
 except KeyboardInterrupt:
     pass
 

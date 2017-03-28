@@ -6,7 +6,7 @@ import Vector
 import Transform
 import MovementFeedback
 
-
+import time
 acDetectorPort = 36
 #GPIO.cleanup()
 print("Start")
@@ -19,10 +19,14 @@ reader = ACDetectorReader.ACDetectorReader(acDetectorPort)
 driveBoard = "/dev/ttyACM0"
 mapBoard = "/dev/ttyUSB0"
 
+# Encoder ports
+encoderA = 15 
+encoderB = 16
+
 #Initialize navigation
 startPosition = Vector.Vector(0.5, 6.5)#measured in feet
 startRotation = 45.0
-nav = Navigation.Navigation(startPosition, startRotation, driveBoard, mapBoard)
+nav = Navigation.Navigation(startPosition, startRotation, driveBoard, mapBoard, encoderA, encoderB )
 
 #Initialize MovementFeedback
 #movementFeedback = MovementFeedback.MovementFeedback(drive)
@@ -31,13 +35,24 @@ nav = Navigation.Navigation(startPosition, startRotation, driveBoard, mapBoard)
 # However long we have to map the whole thing
 duration = 360.0
 
+counter = 0
+lastTime = time.time()
+POLL_RATE = 1.0
+DELTA_TIME = 1/POLL_RATE 
+
 try:
     #Start main loop
     while(1):
         # Update all sensor input
         reader.Update()
         nav.Update(reader.GetSensorValue())
-    
+        
+        counter += 1
+        if time.time() - lastTime > DELTA_TIME:
+            print( "Times run: ", counter )
+            counter = 0
+            lastTime = time.time()        
+
         if(reader.GetAge() > duration):
             break
 
