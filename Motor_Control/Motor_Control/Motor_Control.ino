@@ -56,6 +56,8 @@ void loop() {
             int rearV   = Serial.parseInt();
             int frontLV = Serial.parseInt();
             int frontRV = Serial.parseInt();
+
+            Serial.flush();
     
             digitalWrite(REAR_M, rearV < 0);
             digitalWrite(FRONT_LEFT_M, frontLV < 0);           
@@ -68,6 +70,7 @@ void loop() {
         else if (motorType == STEPPER){
 
 	        int steps = Serial.parseInt();
+          Serial.flush();
 
             digitalWrite(dir, steps < 0);       //Pull direction pin low to move "forward"
   		
