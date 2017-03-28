@@ -1,4 +1,3 @@
-from Transform import Transform
 from Vector import Vector
 import Maze
 
@@ -208,6 +207,7 @@ class Navigation:
         vectorToB6 = (1.5 - position[0], 5.5 - position[1])
         #targetAngle = math.atan()
         return
+
     #returns the angle the robot needs to face in order to go in the direction a vector points
     #returns angle from 0 to 360
     def AngleOfVector(self, v):
@@ -217,6 +217,7 @@ class Navigation:
             return atan(v[1] / float(v[0]))
         elif v[0] < 0:
             return atan(v[1] / float(v[0])) + math.pi / 2.0
+            
     # Tells the robot to go forward after we've done a rotation
     def SetForward(self):
         self.rotVelocity = STOP_ROTATION
@@ -262,112 +263,3 @@ class Navigation:
         self.drive.SetMotors( self.velocity, self.rotVelocity )
     def toRad(angle):
         return angle * pi / 180.0
-    
-
-'''
-    def SetDriver(self, newDriver):
-        self.driver = newDriver
-'''   
-
-'''
-    def SendNewMovement(self):
-        print("SendNewMovementTransform")
-        self.driver.SetMotors(self.currentMovement)
-'''
-'''
-    def PerimeterSearch(self):
-        newDir = Vector(0.0, 0.0)
-        terminated = False
-        if(self.zigZagInVerticalMovement):
-            if(self.zigZagVerticalMoveTarget < 0):
-                terminated = True
-                newDir = self.TerminateZigZagSearch()
-            else:     
-                if(self.transform.position[1] < self.zigZagVerticalMoveTarget):
-                    self.zigZagInVerticalMovement = False
-                    if(self.zigZagDirection == 0):
-                        newDir = Vector(-100, 0)
-                    else:
-                        newDir = Vector(100, 0)
-        else:#when the movement is not vertical
-            if(self.zigZagDirection == 0):#0 is left, 1 is right
-                if(self.transform.position[0] < 0.5):
-                    newDir = self.FinishedZigZagSidewaysMovement()
-            else:#when moving right
-                if(self.transform.position[0] > BOARD_WIDTH - 0.5):
-                    newDir = self.FinishedZigZagSidewaysMovement()
-        if(newDir != Vector(0.0, 0.0) or terminated == True):  
-            self.currentMovement.position = newDir
-            self.SendNewMovement()
-        
-        #self.state = FOLLOW_CABLE
-    
-    def FinishedZigZagSidewaysMovement(self):
-        self.zigZagDirection = 0 if (self.zigZagDirection == 1) else 1
-        self.zigZagInVerticalMovement= True
-        self.zigZagVerticalMoveTarget -= 1
-        return Vector(0, -100)
-    def TerminateZigZagSearch(self):
-        self.state = FOLLOW_CABLE
-        return Vector(0, 0)
-    
-'''
-
-'''
-        IN PERIMETER SEARCH FUNCTION
-        else:#this part makes a hard coded square loop
-            newDir = Vector(0.0, 0.0)
-            needNewMovementSent = False
-            if(self.initialSearchDirection % 2 == 0):
-                if(self.transform.position[0] < 0.5 or self.transform.position[0] > 6.5):
-                    newDir = Vector(0.0, 100.0) * (self.initialSearchDirection - 1)
-                    needNewMovementSent = True
-                    if(self.transform.position[0] < 0.5):
-                        self.transform.position = Vector(0.5, self.transform.position[1])
-                    else:
-                        self.transform.position = Vector(6.5, self.transform.position[1])
-            else:   
-                if(self.transform.position[1] < 0.5 or self.transform.position[1] > 6.5):
-                        newDir = Vector(100.0, 0.0) * (self.initialSearchDirection - 2)
-                    needNewMovementSent = True
-                    if(self.transform.position[1] < 0.5):
-                        self.transform.position = Vector(self.transform.position[0], 0.5)
-                    else:
-                        self.transform.position = Vector(self.transform.position[0], 6.5)
-                        
-            if(needNewMovementSent):
-                self.currentMovement.position = newDir
-                self.SendNewMovement()
-                self.initialSearchDirection += 1
-                if(self.initialSearchDirection > 3):#loop back to zero if gone around every side.
-                    self.initialSearchDirection = 0
-'''
-
-        
-'''
-    # Make the robot run along the perimeter until we find the cable 
-    def PerimeterSearch(self):
-        #print("Searching perimeter for current...")
-
-        delta = self.feedback.Update()
-        self.position += delta[0]
-        self.rotation += delta[1]
-
-        if self.foundCable == True:
-            self.state = FOLLOW_CABLE
-
-        else:
-            if self.curDirection == ROTATE and self.rotation >= self.targetAngle:
-                self.SetForward()                    
-            # Once we hit the end of the board,
-            # tell the robot to rotate
-            elif self.curDirection == RIGHT and self.position[0] > 6.5:
-                self.SetRotate()
-            elif self.curDirection == UP and self.position[1] < 0.5:
-                self.SetRotate()
-            elif self.curDirection == LEFT and self.position[0] < 0.5:
-                self.SetRotate()
-            elif self.curDirection == DOWN and self.position[1] > 6.5:
-                self.StopAllMotors()
-    
-'''

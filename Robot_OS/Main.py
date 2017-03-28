@@ -1,36 +1,16 @@
-import ACDetectorReader
-import Navigation
-import Drive
 import RPi.GPIO as GPIO
+import Navigation
 import Vector
-import Transform
-import MovementFeedback
 
 import time
-acDetectorPort = 36
+
 #GPIO.cleanup()
 print("Start")
-
-#Initialize ACDetectorReader
-reader = ACDetectorReader.ACDetectorReader(acDetectorPort)
-
-#initialize Drive
-#drive = Drive.Drive("/dev/ttyACM0")
-driveBoard = "/dev/ttyACM0"
-mapBoard = "/dev/ttyUSB0"
-
-# Encoder ports
-encoderA = 15 
-encoderB = 16
 
 #Initialize navigation
 startPosition = Vector.Vector(0.5, 6.5)#measured in feet
 startRotation = 45.0
-nav = Navigation.Navigation(startPosition, startRotation, driveBoard, mapBoard, encoderA, encoderB )
-
-#Initialize MovementFeedback
-#movementFeedback = MovementFeedback.MovementFeedback(drive)
-#drive.SetMotors(Transform.Transform(Vector.Vector(0.0, 0.0), 050.0))
+nav = Navigation.Navigation(startPosition, startRotation )
 
 # However long we have to map the whole thing
 duration = 360.0
@@ -44,7 +24,6 @@ try:
     #Start main loop
     while(1):
         # Update all sensor input
-        reader.Update()
         nav.Update(reader.GetSensorValue())
         
         counter += 1
