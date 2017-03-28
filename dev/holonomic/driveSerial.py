@@ -62,6 +62,7 @@ try:
         elif setMotor == 5:
             numSteps = eval( input( "Number of steps to move: " ) )
             output = "0 %d\n" % (numSteps)
+            print ( "OUTPUT TO STEPPER: " , output )
         else:
             speed = eval( input( "Motor Speed: " ) )
 
