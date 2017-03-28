@@ -38,6 +38,8 @@ void setup()
   pinMode(EN, OUTPUT);
   resetBEDPins(); //Set step, direction, microstep and enable pins to default states
 
+  digitalWrite( EN, HIGH );
+  
   Serial.begin(9600);
   Serial.print(1);
 } 
@@ -57,7 +59,6 @@ void loop() {
             int frontLV = Serial.parseInt();
             int frontRV = Serial.parseInt();
 
-            Serial.flush();
     
             digitalWrite(REAR_M, rearV < 0);
             digitalWrite(FRONT_LEFT_M, frontLV < 0);           
@@ -70,11 +71,6 @@ void loop() {
         else if (motorType == STEPPER){
 
 	        int steps = Serial.parseInt();
-          Serial.flush();
-
-            digitalWrite(MS1, LOW)
-            digitalWrite(MS2, LOW)
-            digitalWrite(MS3, LOW)
 
             digitalWrite(dir, steps < 0);       //Pull direction pin low to move "forward"
   		

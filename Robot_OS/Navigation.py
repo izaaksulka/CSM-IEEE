@@ -108,7 +108,6 @@ class Navigation:
             self.StopAllMotors()
             #self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
-
             if time.time() - self.startPause > 0.5:
                 # Map cable onto the LED Matrix
                 self.maze.SendAcSensorData(self.position, ACSensorData) 
@@ -217,7 +216,7 @@ class Navigation:
             return atan(v[1] / float(v[0]))
         elif v[0] < 0:
             return atan(v[1] / float(v[0])) + math.pi / 2.0
-            
+
     # Tells the robot to go forward after we've done a rotation
     def SetForward(self):
         self.rotVelocity = STOP_ROTATION

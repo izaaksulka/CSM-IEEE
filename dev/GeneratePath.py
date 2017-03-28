@@ -29,3 +29,8 @@ for row in range(5):
         moveCommands.write( output )
 
 moveCommands.close()
+
+fin = open( "moveCommands.txt", 'r' )
+contents = fin.read()
+print( contents )
+fin.close()

@@ -70,6 +70,9 @@ class Navigation:
     
         # The current algorithm the robot is running
         self.state = SCAN_BOARD
+
+        self.moveQueue = []
+        self.PopulateQueue()
   
         ''' I think all this is deprecated
         self.curDirection = RIGHT
@@ -104,7 +107,13 @@ class Navigation:
             # Tell the chassis what to do now that we've figure that out
             # where we're going
 
-    def 
+    def ScanBoard(self):
+        fin = open( "./moveCommands.txt", 'r' )
+        instructions = fin.read()
+        fin.close()
+
+        
+
 
     # Tells the robot to go forward a set distance
     def SetForward(self, distance):
