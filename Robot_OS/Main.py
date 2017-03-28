@@ -14,6 +14,8 @@ nav = Navigation.Navigation(startPosition, startRotation )
 
 # However long we have to map the whole thing
 duration = 360.0
+startTime = time.time()
+
 
 counter = 0
 lastTime = time.time()
@@ -22,9 +24,9 @@ DELTA_TIME = 1/POLL_RATE
 
 try:
     #Start main loop
-    while(1):
-        # Update all sensor input
-        nav.Update(reader.GetSensorValue())
+    while True:
+        # Update the robot state
+        nav.Update()
         
         counter += 1
         if time.time() - lastTime > DELTA_TIME:
@@ -32,7 +34,9 @@ try:
             counter = 0
             lastTime = time.time()        
 
-        if(reader.GetAge() > duration):
+        # Stop the program once we've hit 6 minutes
+        if( time.time() - startTime > duration ):
+            endTime = time.time()
             break
 
         #print(str(reader.GetSensorValue()))
@@ -40,11 +44,11 @@ except KeyboardInterrupt:
     pass
 
 # Clean up everything once we're done
-nav.StopAllMotors()
+nav.Cleanup()
 GPIO.cleanup()
 
 print("Called Update() " + str(reader.updateCounter) + " times in " + str(duration) + " seconds.")
-print("For " + str(reader.updateCounter / duration) + " updates per second.")
+print("For " + str(reader.updateCounter / (endTime - startTime)) + " updates per second.")
 print("\nFinish")
 
 

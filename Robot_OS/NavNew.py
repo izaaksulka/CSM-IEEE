@@ -102,7 +102,9 @@ class Navigation:
                 self.maze.PrintMap()
             
             # Tell the chassis what to do now that we've figure that out
-            # Where we're going
+            # where we're going
+
+    def 
 
     # Tells the robot to go forward a set distance
     def SetForward(self, distance):
@@ -119,3 +121,21 @@ class Navigation:
     def SetRotate(self, deltaAngle):
         self.velocity = STOP
         self.rotVelocity = ROTATE_SPEED * ( -1 if deltaAngle < 0 else 1 )
+
+        # TODO: Set the motors somewhere
+
+    def StopAllMotors(self):
+        self.velocity = STOP
+        self.rotVelocity = STOP_ROTATION
+
+        # TODO: Set the motors somewhere
+
+    # Closes all serial communications and stops the robot
+    def Cleanup(self):
+        self.StopAllMotors()
+        self.drive.Cleanup()
+        self.maze.Cleanup()
+
+
+    def ToRad(angle):
+        return angle * pi / 180.0

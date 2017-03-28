@@ -126,7 +126,5 @@ class Maze:
                 i += 1
         return t
 
-
-
-
-
+    def Cleanup(self):
+        self.ser.close()

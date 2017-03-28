@@ -52,4 +52,7 @@ class Drive:
                                    int(round(frontROut)))
 
         self.ser.write( output.encode( encoding = "ascii" ) )
-        
+     
+     def Cleanup(self):
+        self.SetMotors( Vector(0,0), 0 )
+        self.ser.close()
