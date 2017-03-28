@@ -72,6 +72,10 @@ void loop() {
 	        int steps = Serial.parseInt();
           Serial.flush();
 
+            digitalWrite(MS1, LOW)
+            digitalWrite(MS2, LOW)
+            digitalWrite(MS3, LOW)
+
             digitalWrite(dir, steps < 0);       //Pull direction pin low to move "forward"
   		
 	        for(int x= 0; x< abs(steps); x++){  //Loop the forward stepping enough times for motion to be visible
