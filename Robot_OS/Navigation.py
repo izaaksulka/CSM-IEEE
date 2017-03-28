@@ -39,7 +39,7 @@ class Navigation:
         self.drive = Drive( driveBoard )
 
         self.feedback = MovementFeedback()
-        self.feedback.SetDirection( self.velocity, self.rotVelocity )
+        #self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
         #initialization of the maze array
         self.maze = Maze.Maze(BOARD_WIDTH, BOARD_HEIGHT, mapBoard)
@@ -70,7 +70,10 @@ class Navigation:
         # Map cable onto the LED Matrix
         self.maze.SendAcSensorData(self.position, ACSensorData)
         '''
-        delta = self.feedback.Update(self.rotation)
+        isRotating = False
+        if self.curDirection == ROTATE_CCW or self.curDirection == ROTATE_CW:           isRotating = True
+ 
+        delta = self.feedback.Update(self.rotation, isRotating)
         newPosX = self.position[0] + delta[0][0]
         newPosY = self.position[1] + delta[0][1]
         self.position = Vector( newPosX, newPosY )
@@ -126,11 +129,11 @@ class Navigation:
         else:
             self.velocity = MOVE_FORWARD
             self.rotVelocity = STOP_ROTATION
-            self.feedback.SetDirection( self.velocity, self.rotVelocity )
+            #self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
         '''
         self.lastDirection = RIGHT
-        self.feedback.SetDirection( self.velocity, self.rotation )
+        #self.feedback.SetDirection( self.velocity, self.rotation )
         '''
 
     def ScanBoard(self, ACSensorData):
@@ -138,7 +141,7 @@ class Navigation:
 
         if self.paused:
             self.StopAllMotors()
-            self.feedback.SetDirection( self.velocity, self.rotVelocity )
+            #self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
 
             if time.time() - self.startPause > 0.5:
@@ -169,7 +172,7 @@ class Navigation:
                     else: 
                         self.rotVelocity = ROTATE_SPEED
 
-                self.feedback.SetDirection( self.velocity, self.rotVelocity )
+                #self.feedback.SetDirection( self.velocity, self.rotVelocity )
             return
 
 
@@ -262,7 +265,7 @@ class Navigation:
 
         self.velocity = MOVE_FORWARD
         self.rotVelocity = STOP_ROTATION
-        self.feedback.SetDirection( self.velocity, self.rotVelocity )
+        #self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
     # Tells the robot to turn 90 degrees after it's gone all the way
     # across the board        
@@ -280,7 +283,7 @@ class Navigation:
             self.curDirection = ROTATE_CCW
             self.rotVelocity = ROTATE_SPEED           
 
-        self.feedback.SetDirection( self.velocity, self.rotVelocity )
+        #self.feedback.SetDirection( self.velocity, self.rotVelocity )
 
     def StopAllMotors(self):
         self.velocity = STOP
