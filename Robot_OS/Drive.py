@@ -47,8 +47,6 @@ class Drive:
         frontROut =  ( self.bodyVel.inner( self.frontRDir ) + self.b * self.bodyRot ) / self.wheelR
         frontLOut =  ( self.bodyVel.inner( self.frontLDir ) + self.b * self.bodyRot ) / self.wheelR
     
-        # Really bad solutions to problems
-        frontROut += copysign( 3, frontROut )
            
         output = "1 %d %d %d\n" % (int(round(rearOut)),
                                    int(round(frontLOut)), 
