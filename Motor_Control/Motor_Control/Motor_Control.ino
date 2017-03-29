@@ -19,6 +19,10 @@
 int motorType;
 enum motorType {STEPPER, HOLONOMIC};
 
+int sgn( int val ) {
+  return (val>0) - (val<0);
+}
+
 void setup()
 {
   pinMode(REAR_E, OUTPUT);
@@ -70,8 +74,13 @@ void loop() {
         digitalWrite( REAR_M, !isRearDirCCW );
         digitalWrite(FRONT_LEFT_M, !isFrontLDirCCW);
         digitalWrite(FRONT_RIGHT_M, !isFrontRDirCCW);
-        delay( 100 );
+        delay( 100 ); 
       }
+      /*
+      else if( frontRV != 0 ) {
+        frontRV += 6 * sgn( frontRV );
+      }
+      */
       
       isRearDirCCW = rearV < 0;
       isFrontLDirCCW = frontLV < 0;
