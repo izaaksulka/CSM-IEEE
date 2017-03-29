@@ -44,6 +44,9 @@ void setup()
   Serial.print(1);
 }
 
+bool isRearDirCCW = true;
+bool isFrontLDirCCW = true;
+bool isFrontRDirCCW = true;
 
 void loop() {
 
@@ -53,15 +56,30 @@ void loop() {
 
     if (motorType == HOLONOMIC) {
 
-
+      /*
+      int lastV = rearV;
+      int lastfLV = frontLV;
+      int lastfRV = frontRV;
+      */
+      
       int rearV   = Serial.parseInt();
       int frontLV = Serial.parseInt();
       int frontRV = Serial.parseInt();
 
-
-      digitalWrite(REAR_M, rearV < 0);
-      digitalWrite(FRONT_LEFT_M, frontLV < 0);
-      digitalWrite(FRONT_RIGHT_M, frontRV < 0);
+      if( rearV == 0 && frontLV == 0 && frontRV == 0 ) {
+        digitalWrite( REAR_M, !isRearDirCCW );
+        digitalWrite(FRONT_LEFT_M, !isFrontLDirCCW);
+        digitalWrite(FRONT_RIGHT_M, !isFrontRDirCCW);
+        delay( 100 );
+      }
+      
+      isRearDirCCW = rearV < 0;
+      isFrontLDirCCW = frontLV < 0;
+      isFrontRDirCCW = frontRV < 0;
+      
+      digitalWrite(REAR_M, isRearDirCCW);
+      digitalWrite(FRONT_LEFT_M, isFrontLDirCCW);
+      digitalWrite(FRONT_RIGHT_M, isFrontRDirCCW);
 
       analogWrite(REAR_E,       abs(rearV));
       analogWrite(FRONT_RIGHT_E, abs(frontLV));
