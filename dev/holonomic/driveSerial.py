@@ -4,8 +4,7 @@ from Vector import Vector
 import serial
 import time
 
-comPort = "COM3"
-#comPort = "/dev/ttyACM0"
+comPort = "/dev/ttyACM0"
 
 # The radius of the drive wheels
 wheelR = 1 
