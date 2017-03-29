@@ -37,8 +37,8 @@ BOARD_HEIGHT = 7
 # Pre-defined move speeds
 STOP = Vector( 0, 0 )
 STOP_ROTATION = 0
-MOVE_FORWARD = Vector( 0, 125 )
-ROTATE_SPEED = 75
+MOVE_FORWARD = Vector( 0, 175 )
+ROTATE_SPEED = 125
 
 class Navigation:
     def __init__(self, startPosition, startRotation):

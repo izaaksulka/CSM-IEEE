@@ -12,7 +12,7 @@ DELTA_TIME = 1 / POLL_RATE
 # Convert mouse distance to feet    
 DISTANCE_SCALE = 0.36590066804 * 1.4 / 680 #ft/rot / ticks/rot
 #ROTATION_SCALE = -0.900 #degrees per tick.  changed to negative because feedback was backwards
-ROTATION_SCALE = -0.14
+ROTATION_SCALE = -0.13
 
 class MovementFeedback:
 
