@@ -142,16 +142,21 @@ class Navigation:
 
     # Dequeues the next command and sets motors accordingly
     def NextCommand(self):
-        nextCommand = self.moveQueue.popleft()
-        print("Next command type: ", nextCommand[0])
-        if nextCommand[0] == "FWD":
-            self.SetForward( nextCommand[1] )
-        elif nextCommand[0] == "ROT":
-            self.SetRotate( nextCommand[1] )
-        elif nextCommand[0] == "PAUSE":
-            self.SetPause( nextCommand[1] )
+        if len( self.moveQueue ) != 0:
+            nextCommand = self.moveQueue.popleft()
+            print("Next command type: ", nextCommand[0])
+            if nextCommand[0] == "FWD":
+                self.SetForward( nextCommand[1] )
+            elif nextCommand[0] == "ROT":
+                self.SetRotate( nextCommand[1] )
+            elif nextCommand[0] == "PAUSE":
+                self.SetPause( nextCommand[1] )
 
-        self.drive.SetMotors( self.velocity, self.rotVelocity )
+            self.drive.SetMotors( self.velocity, self.rotVelocity )
+        else:
+            self.moveState = FINISHED
+            self.SetPause( 1.0 ) 
+
 
     # Reads in and enqueues commands for scan board mode
     def ScanBoard(self):
