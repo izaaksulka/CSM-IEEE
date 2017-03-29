@@ -45,59 +45,59 @@ def writeRadial( fileName ):
 
     for i in range(3):
         moveCommands.write( "FWD 1.0\nPAUSE 2.0\n" )
-    moveCommands.write( "FWT 2.0\nPAUSE 2.0\n" )
+    moveCommands.write( "FWT 3.0\nPAUSE 2.0\n" )
 
     moveCommands.write( "FWD -1.0\nPAUSE 2.0\nFWD -1.0\nPAUSE 2.0\n" )
     moveCommands.write( "ROT -90.0\nPAUSE 2.0\n" )
     moveCommands.write( "FWD 1.0\nPAUSE 2.0\n" )
-    moveCommands.write( "FWT 2.0\nPAUSE 2.0\n" )
+    moveCommands.write( "FWT 3.0\nPAUSE 2.0\n" )
     moveCommands.write( "FWD -1.0\nPAUSE 2.0\nFWD -1.0\nPAUSE 2.0\n" )
 
     for i in range(3):
         moveCommands.write( "FWD -1.0\nPAUSE 2.0\n" )
-    moveCommands.write( "FWT -2.0\nPAUSE 2.0\n" )
+    moveCommands.write( "FWT -3.0\nPAUSE 2.0\n" )
     moveCommands.write( "FWD 1.0\nPAUSE 2.0\nFWD 1.0\nPAUSE 2.0\n" )
     moveCommands.write( "ROT 0.0\nPAUSE 2.0\n" )
 
     moveCommands.write( "FWD 1.0\nPAUSE 2.0\n" )
-    moveCommands.write( "FWT 2.0\nPAUSE 2.0\n" )
+    moveCommands.write( "FWT 3.0\nPAUSE 2.0\n" )
     moveCommands.write( "FWD -1.0\nPAUSE 2.0\nFWD -1.0\nPAUSE 2.0\n" )
 
     for i in range(3):
         moveCommands.write( "FWD -1.0\nPAUSE 2.0\n" )
-    moveCommands.write( "FWT -2.0\nPAUSE 2.0\n" )
+    moveCommands.write( "FWT -3.0\nPAUSE 2.0\n" )
     moveCommands.write( "FWD 1.0\nPAUSE 2.0\nFWD 1.0\nPAUSE 2.0\n" )
     moveCommands.write( "ROT 0.0\nPAUSE 2.0\n" )
 
     moveCommands.write( "FWD 1.0\nPAUSE 2.0\n" )
-    moveCommands.write( "FWT 2.0\nPAUSE 2.0\n" )
+    moveCommands.write( "FWT 3.0\nPAUSE 2.0\n" )
     moveCommands.write( "FWD -1.0\nPAUSE 2.0\nFWD -1.0\nPAUSE 2.0\n" )
 
     for i in range(3):
         moveCommands.write( "FWD -1.0\nPAUSE 2.0\n" )
-    moveCommands.write( "FWT -2.0\nPAUSE 2.0\n" )
+    moveCommands.write( "FWT -3.0\nPAUSE 2.0\n" )
     moveCommands.write( "FWD 1.0\nPAUSE 2.0\nFWD 1.0\nPAUSE 2.0\n" )
     moveCommands.write( "ROT 90.0\nPAUSE 2.0\n" )
 
     moveCommands.write( "FWD 1.0\nPAUSE 2.0\n" )
-    moveCommands.write( "FWT 2.0\nPAUSE 2.0\n" )
+    moveCommands.write( "FWT 3.0\nPAUSE 2.0\n" )
     moveCommands.write( "FWD -1.0\nPAUSE 2.0\nFWD -1.0\nPAUSE 2.0\n" )
 
     for i in range(3):
         moveCommands.write( "FWD -1.0\nPAUSE 2.0\n" )
 
-    moveCommands.write( "FWT -2.0\nPAUSE 2.0\n" )
+    moveCommands.write( "FWT -3.0\nPAUSE 2.0\n" )
     moveCommands.write( "FWD 1.0\nPAUSE 2.0\nFWD 1.0\nPAUSE 2.0\n" )
     moveCommands.write( "ROT 180.0\nPAUSE 2.0\n" )
 
     moveCommands.write( "FWD 1.0\nPAUSE 2.0\n" )
-    moveCommands.write( "FWT 2.0\nPAUSE 2.0\n" )
+    moveCommands.write( "FWT 3.0\nPAUSE 2.0\n" )
 
     moveCommands.write( "FWD -0.25\nPAUSE 2.0\n" )
     moveCommands.write( "ROT 270\nPAUSE 2.0\n" )
 
     moveCommands.write( "FWD 1.0\nPAUSE 2.0\n" )
-    moveCommands.write( "FWT 2.0\nPAUSE 2.0\n" )
+    moveCommands.write( "FWT 3.0\nPAUSE 2.0\n" )
 
     moveCommands.close()
 
