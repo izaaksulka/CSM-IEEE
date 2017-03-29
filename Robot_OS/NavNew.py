@@ -7,6 +7,7 @@ import ACDetectorReader
 import Maze
 
 # External libraries
+from collections import deque
 from math import pi, cos, sin 
 import time
 
@@ -20,10 +21,13 @@ ENCODER_A = 15
 ENCODER_B = 16
 AC_DETECTOR_PORT = 36
 
+''' Probably deprecated
 PAUSE_DURATION = 2.0 
+'''
+ERROR = 0.05
 
 SCAN_BOARD, OPEN_CACHE, RETURN_HOME = range(4)
-RIGHT, LEFT, UP, ROTATE_CW, ROTATE_CCW = range(5)
+READY, PAUSED, TRANSLATING, ROTATING, FINISHED = range(4)
 
 # Dimensions in feet
 BOARD_WIDTH = 7.0
@@ -67,11 +71,13 @@ class Navigation:
 
         self.targetPos = startPosition
         self.targetAngle = startRotation
+        self.targetTime = time.time()
     
         # The current algorithm the robot is running
-        self.state = SCAN_BOARD
+        self.nextState = SCAN_BOARD
+        self.moveState = READY
 
-        self.moveQueue = []
+        self.moveQueue = deque( [] )
         self.PopulateQueue()
   
         ''' I think all this is deprecated
@@ -97,32 +103,71 @@ class Navigation:
         
             #print( "Cur Pos: ", self.position, ", Cur Rotation: ", self.rotation, ", State: ", self.curDirection )
             
-            # Call the appropriate update function based on what algo
-            # we're running right now
-            if self.state == SCAN_BOARD:
-                self.ScanBoard()
-            elif self.state == OPEN_CACHE:
-                self.maze.PrintMap()
+            # If we've just started the program
+            # or finished all of the instructions from
+            # the last algorithm
+            if self.moveState == READY or self.moveState == FINISHED:
+                # Call the appropriate update function based on what algo
+                # we're running right now
+                if self.nextState == SCAN_BOARD:
+                    self.ScanBoard()
+                    self.NextCommand()
+                    self.nextState = OPEN_CACHE
+                elif self.nextState == OPEN_CACHE:
+                    self.maze.PrintMap()
+                    # Set next state here
+
+            if self.moveState == TRANSLATING and
+              (self.position - self.targetPos).norm() < ERROR:
+                self.NextCommand()
+
+            elif self.moveState == ROTATING and
+               abs( self.rotation - self.targetAngle ) < ERROR:
+                self.NextCommand()
+
+            elif self.moveState == PAUSED and time.time() > self.targetTime:
+                self.NextCommand()
             
+
             # Tell the chassis what to do now that we've figure that out
             # where we're going
 
+    # Dequeues the next command and sets motors accordingly
+    def NextCommand(self):
+        nextCommand = self.moveQueue.popleft()
+
+        if nextCommand[0] == "FWD":
+            self.SetForward( nextCommand[1] )
+        elif nextCommand[0] == "ROT":
+            self.SetRotate( nextCommand[1] )
+        elif nextCommand[0] == "PAUSE":
+            self.SetPause( nextCommand[1] )
+
+        self.drive.SetMotors( self.velocity, self.rotVelocity )
+
+    # Reads in and enqueues commands for scan board mode
     def ScanBoard(self):
         fin = open( "./moveCommands.txt", 'r' )
-        instructions = fin.read()
+        contents = fin.read()
         fin.close()
 
-        
-
+        # Split the file into individual instructions
+        # and add those instructions to the queue
+        for instruction in contents.split("\n"):
+            if len( instruction ) != 0:
+                cmd, duration = instruction.split()
+                duration = float( duration )
+                self.moveQueue.append( (cmd, duration) )
 
     # Tells the robot to go forward a set distance
     def SetForward(self, distance):
         self.rotVelocity = STOP_ROTATION
         self.velocity = MOVE_FORWARD
+        self.moveState = TRANSLATING
 
         rotRad = ToRad( self.rotation )
-        self.targetPos = ( self.position[0] * distance * cos( rotRad ),
-                           self.position[1] * distance * sin( rotRad ) )
+        self.targetPos = ( self.position[0] * distance *  cos( rotRad ),
+                           self.position[1] * distance * -sin( rotRad ) )
 
         # TODO: Set the motors somewhere
 
@@ -130,8 +175,20 @@ class Navigation:
     def SetRotate(self, deltaAngle):
         self.velocity = STOP
         self.rotVelocity = ROTATE_SPEED * ( -1 if deltaAngle < 0 else 1 )
+        self.moveState = ROTATING
 
         # TODO: Set the motors somewhere
+
+    def SetPause(self, duration):
+        self.velocity = STOP
+        self.rotVelocity = STOP_ROTATION
+        self.moveState = PAUSED
+
+        self.targetTime = time.time() + duration
+
+        # TODO: Set the motors somewhere
+        # TODO: Start a timer somewhere
+        # TODO: Read AC sensor somewhere
 
     def StopAllMotors(self):
         self.velocity = STOP
