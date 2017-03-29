@@ -152,6 +152,8 @@ class Navigation:
                 self.SetRotate( nextCommand[1] )
             elif nextCommand[0] == "PAUSE":
                 self.SetPause( nextCommand[1] )
+            elif nextCommand[0] == "FWT":
+                self.SetForwardTimed( nextCommand[1] )
 
             self.drive.SetMotors( self.velocity, self.rotVelocity )
         else:
@@ -185,6 +187,15 @@ class Navigation:
                            self.position[1] + distance * -sin( rotRad ) )
 
         # TODO: Set the motors somewhere
+
+    def SetForwardTimed(self, duration):
+        self.rotVelocity = STOP_ROTATION
+        self.velocity = MOVE_FORWARD
+        self.isRotating = False
+
+        self.moveState = PAUSED
+        self.isRotating = False
+        self.targetTime = time.time() + duration
 
     # Tells the robot to move a certain number of degrees
     def SetRotate(self, targetAngle):
