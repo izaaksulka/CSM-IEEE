@@ -8,7 +8,7 @@ import Maze
 
 # External libraries
 from collections import deque
-from math import pi, cos, sin 
+from math import pi, cos, sin, copysign
 import time
 
 # SERIAL PORTS
@@ -178,7 +178,8 @@ class Navigation:
     # Tells the robot to go forward a set distance
     def SetForward(self, distance):
         self.rotVelocity = STOP_ROTATION
-        self.velocity = MOVE_FORWARD
+        direction = copysign( 1, distance )
+        self.velocity = direction * MOVE_FORWARD
         self.moveState = TRANSLATING
         self.isRotating = False
 
