@@ -4,7 +4,8 @@ from Vector import Vector
 import serial
 import time
 
-comPort = "/dev/ttyACM0"
+comPort = "COM3"
+#comPort = "/dev/ttyACM0"
 
 # The radius of the drive wheels
 wheelR = 1 
@@ -76,9 +77,12 @@ try:
         output[-1] = "\n"
         output = "".join(output)
 
+        print( output )
         ser.write( output.encode( encoding = "ascii" ) )        
     
 except KeyboardInterrupt:
     pass 
-        
+
+output = "0 0 0 0\n"
+ser.write( output.encode( encoding = "ascii" ) )
 ser.close()
