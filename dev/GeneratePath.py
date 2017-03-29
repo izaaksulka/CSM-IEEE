@@ -7,28 +7,30 @@ FILE_LOCATION = "../Robot_OS/moveCommands.txt"
 moveCommands = open( FILE_LOCATION, 'w' )
 
 # Move into the inner square that excludes the cache tiles
-moveCommands.write( "FWD 1.4\nROT -45.0\nPAUSE 2.0\n" )
+moveCommands.write( "FWD 1.4\nPAUSE 2.0\nROT 0.0\nPAUSE 2.0\n" )
 
 for row in range(5):
-    for col in range(5):
+    for col in range(4):
         # Move forward one foot,
         # so we move and stop on each tile
         moveCommands.write( "FWD 1.0\nPAUSE 2.0\n" )
     
-    TURN_ANGLE = "90.0\n"
+    #TURN_ANGLE = "90.0\n"
 
     # On even rows, we need to turn left to turn upwards
     # On odd rows, we need to turn right
     if row % 2 == 0:
-        output = "ROT " + TURN_ANGLE
+        secondTurn = "ROT 180.0\nPAUSE 2.0\n"
     else:
-        output = "ROT -" + TURN_ANGLE
+        secondTurn = "ROT 0.0\nPAUSE 2.0\n"
+
+    firstTurn = "ROT 90.0\nPAUSE 2.0\n"
 
     # We don't want to turn up on the last row
     if row != 4:
-        moveCommands.write( output )
+        moveCommands.write( firstTurn )
         moveCommands.write( "FWD 1.0\nPAUSE 2.0\n" )
-        moveCommands.write( output )
+        moveCommands.write( secondTurn )
 
 moveCommands.close()
 

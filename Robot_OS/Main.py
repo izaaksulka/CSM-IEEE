@@ -9,7 +9,7 @@ print("Start")
 
 #Initialize navigation
 startPosition = Vector.Vector(0.5, 6.5)#measured in feet
-startRotation = 45.0
+startRotation = 35.0
 nav = Navigation.Navigation(startPosition, startRotation )
 
 # However long we have to map the whole thing

@@ -24,7 +24,8 @@ AC_DETECTOR_PORT = 36
 ''' Probably deprecated
 PAUSE_DURATION = 2.0 
 '''
-ERROR = 0.5
+LINEAR_ERROR = 0.05
+ROTATION_ERROR = 0.5
 
 SCAN_BOARD, OPEN_CACHE, RETURN_HOME = range(3)
 READY, PAUSED, TRANSLATING, ROTATING, FINISHED = range(5)
@@ -36,8 +37,8 @@ BOARD_HEIGHT = 7
 # Pre-defined move speeds
 STOP = Vector( 0, 0 )
 STOP_ROTATION = 0
-MOVE_FORWARD = Vector( 0, 200 )
-ROTATE_SPEED = 100
+MOVE_FORWARD = Vector( 0, 125 )
+ROTATE_SPEED = 75
 
 class Navigation:
     def __init__(self, startPosition, startRotation):
@@ -123,13 +124,13 @@ class Navigation:
                 print("state: ", self.moveState) 
                 print("Position ", self.position,  " Cur Rotation: ", self.rotation, "MoveState: " , self.moveState )
                 print("target angle = ", self.targetAngle)
-             # print( "Error: ", (self.position - self.targetPos).norm(), "Threshold: ", ERROR )
+             # print( "Error: ", (self.position - self.targetPos).norm(), "Threshold: ", LINEAR_ERROR )
             #if(self.moveState == ROTATING):
             #    print("rotating")
-            if self.moveState == TRANSLATING and (self.position - self.targetPos).norm() < ERROR:
+            if self.moveState == TRANSLATING and (self.position - self.targetPos).norm() < LINEAR_ERROR:
                 self.NextCommand()
                 
-            elif self.moveState == ROTATING and abs( self.rotation - self.targetAngle ) < ERROR:
+            elif self.moveState == ROTATING and abs( self.rotation - self.targetAngle ) < ROTATION_ERROR:
                 
                 self.NextCommand()
 
@@ -186,12 +187,13 @@ class Navigation:
         # TODO: Set the motors somewhere
 
     # Tells the robot to move a certain number of degrees
-    def SetRotate(self, deltaAngle):
+    def SetRotate(self, targetAngle):
         self.velocity = STOP
-        self.rotVelocity = ROTATE_SPEED * ( -1 if deltaAngle < 0 else 1 )
+        self.rotVelocity = ROTATE_SPEED * ( -1 if targetAngle - self.rotation < 0 else 1 )
         self.moveState = ROTATING
         self.isRotating = True
-        self.targetAngle = self.rotation + deltaAngle
+        #self.targetAngle = self.rotation + deltaAngle
+        self.targetAngle = targetAngle
         # TODO: Set the motors somewhere
 
     def SetPause(self, duration):
