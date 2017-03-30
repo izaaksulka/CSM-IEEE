@@ -16,6 +16,8 @@ def writeGrid( fileName ):
             # Move forward one foot,
             # so we move and stop on each tile
             moveCommands.write( "FWD 1.0\nPAUSE 2.0\n" )
+        moveCommands.write( "FWT 2.0\nPAUSE 2.0\n" ) 
+        moveCommands.write( "FWD -1.0\nPAUSE 2.0\n" )
         
         #TURN_ANGLE = "90.0\n"
 
@@ -34,7 +36,42 @@ def writeGrid( fileName ):
             moveCommands.write( "FWD 1.0\nPAUSE 2.0\n" )
             moveCommands.write( secondTurn )
 
+    #GO HOME E.T. PHONE HOME
+    moveCommmands.write("ROT -135\n PAUSE 2.0\n")
+    moveCommmands.write("FWT 5.0\n")
+
     moveCommands.close()
+
+
+def printAlgo( fileName ):
+    fin = open( fileName, 'r' )
+    contents = fin.read()
+    print( contents )
+    fin.close()
+
+    instructions = deque( [] )
+    for instruction in contents.split("\n"):
+        if len( instruction ) != 0:
+            cmd, duration = instruction.split()
+            duration = float( duration )
+            instructions.append( (cmd, duration) )
+
+    print( instructions )
+    print()
+    print( len( instructions ) )
+
+    while instructions:
+        print( instructions.popleft() )
+
+writeGrid( FILE_LOCATION )
+#writeRadial( FILE_LOCATION )
+printAlgo( FILE_LOCATION )
+
+
+
+
+
+
 
 def writeRadial( fileName ):
     moveCommands = open( fileName, 'w' )
@@ -101,26 +138,3 @@ def writeRadial( fileName ):
 
     moveCommands.close()
 
-def printAlgo( fileName ):
-    fin = open( fileName, 'r' )
-    contents = fin.read()
-    print( contents )
-    fin.close()
-
-    instructions = deque( [] )
-    for instruction in contents.split("\n"):
-        if len( instruction ) != 0:
-            cmd, duration = instruction.split()
-            duration = float( duration )
-            instructions.append( (cmd, duration) )
-
-    print( instructions )
-    print()
-    print( len( instructions ) )
-
-    while instructions:
-        print( instructions.popleft() )
-
-#writeGrid( FILE_LOCATION )
-writeRadial( FILE_LOCATION )
-printAlgo( FILE_LOCATION )

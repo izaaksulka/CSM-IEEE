@@ -49,8 +49,8 @@ except KeyboardInterrupt:
 nav.Cleanup()
 GPIO.cleanup()
 
-print("Called Update() " + str(reader.updateCounter) + " times in " + str(duration) + " seconds.")
-print("For " + str(reader.updateCounter / (endTime - startTime)) + " updates per second.")
+print("Called Update() " + str(counter) + " times in " + str(duration) + " seconds.")
+print("For " + str(counter / (endTime - startTime)) + " updates per second.")
 print("\nFinish")
 
 
