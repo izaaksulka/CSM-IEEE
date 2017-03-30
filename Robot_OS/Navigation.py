@@ -12,6 +12,7 @@ from sevenSegment import SevenSegment
 from collections import deque
 from math import pi, cos, sin, copysign
 import time
+import RPi.GPIO as GPIO
 
 # SERIAL PORTS
 DRIVE_PORT = "/dev/ttyACM0"
@@ -22,6 +23,7 @@ MAP_PORT = "/dev/ttyUSB0"
 ENCODER_A = 15 
 ENCODER_B = 16
 AC_DETECTOR_PORT = 36
+ON_PIN = 11
 
 ''' Probably deprecated
 PAUSE_DURATION = 2.0 
@@ -88,9 +90,17 @@ class Navigation:
         self.counter = 0
         ''' I think all this is deprecated
         self.curDirection = RIGHT
-        self.curRow = 6 
-        self.drive.SetMotors( self.velocity, self.rotVelocity )
-        '''   
+        self.curRow = 6
+        SetMotors( self.velocity, self.rotVelocity )
+        ''' 
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(ON_PIN, GPIO.IN)        
+
+
+        #Don't exit here until the on button is pressed
+        while not GPIO.input(ON_PIN) == GPIO.HIGH:
+            print( "", end = '')
+  
     def Update(self):
             
             # Update the hardware state
@@ -123,6 +133,7 @@ class Navigation:
                     self.maze.SetEnds()
                     self.maze.PrintMap()
                     self.sevenSegment.SetRandomNumber()
+                    print ("NOOOOOOOOOOOOOOOOOOOOOOOOOOOO")                    
                     # Set next state here
            # self.
             self.counter += 1      
@@ -174,7 +185,7 @@ class Navigation:
 
     # Reads in and enqueues commands for scan board mode
     def ScanBoard(self):
-        fin = open( "./moveCommands.txt", 'r' )
+        fin = open( "/home/pi/Desktop/CSM-IEEE/Robot_OS/moveCommands.txt", 'r' )
         contents = fin.read()
         fin.close()
 

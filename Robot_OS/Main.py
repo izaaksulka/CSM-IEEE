@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+
+
 import RPi.GPIO as GPIO
 import Navigation
 import Vector
@@ -13,7 +16,7 @@ startRotation = 45.0
 nav = Navigation.Navigation(startPosition, startRotation )
 
 # However long we have to map the whole thing
-duration = 360.0
+duration = 3600.0
 startTime = time.time()
 
 
@@ -24,10 +27,18 @@ DELTA_TIME = 1/POLL_RATE
 
 GPIO.setmode(GPIO.BOARD)
 
+OFF_PIN = 37
+
+GPIO.setup(OFF_PIN, GPIO.IN) 
+
+
 try:
     #Start main loop
     while True:
         # Update the robot state
+        if GPIO.input(OFF_PIN) == GPIO.HIGH:
+            break
+
         nav.Update()
         
         counter += 1

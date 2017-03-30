@@ -1,8 +1,10 @@
 import RPi.GPIO as GPIO
 from random import randrange
+from time import sleep
 
+#PORTS =[ 21,24,26,29,31,23,22 ]
+PORTS =[ 23,22,21,24,26,29,31 ]
 
-PORTS =[ 21,22,23,24,26,27,28 ]
 
 NUMBERS = [ "0110000","1101101","1111001", "0110011", "1011011", "1011111" ]
 
@@ -19,9 +21,13 @@ class SevenSegment:
         GPIO.setup(PORTS[5], GPIO.OUT )        
         GPIO.setup(PORTS[6], GPIO.OUT )
 
+        for port in PORTS:
+            GPIO.output(port, GPIO.LOW)
+
     def SetRandomNumber(self):
 
-        displayNum = randrange(0,6)
+        displayNum = 4
+        print ( displayNum + 1 )
         bitPattern = NUMBERS[displayNum]
 
         for i in range(7):
@@ -31,9 +37,18 @@ class SevenSegment:
                 GPIO.output(PORTS[i], GPIO.LOW)
             
 
-
+'''
 sevenSegment = SevenSegment()
 
-sevenSegment.SetRandomNumber()
 
+for k in range(10):
+    for port in PORTS:
+        GPIO.output(port, GPIO.HIGH)
+        print (port)
+        sleep(0.5)
+        GPIO.output(port, GPIO.LOW)
+
+sevenSegment.SetRandomNumber()
+input( "cake?" )
 GPIO.cleanup()
+'''
