@@ -29,7 +29,7 @@ GPIO.setmode(GPIO.BOARD)
 
 OFF_PIN = 37
 
-GPIO.setup(OFF_PIN, GPIO.IN) 
+GPIO.setup(OFF_PIN, GPIO.IN, pull_up_down = GPIO.PUD_DOWN) 
 
 
 try:
@@ -38,7 +38,6 @@ try:
         # Update the robot state
         if GPIO.input(OFF_PIN) == GPIO.HIGH:
             break
-
         nav.Update()
         
         counter += 1
@@ -56,9 +55,16 @@ try:
 except KeyboardInterrupt:
     pass
 
+
+
+
 # Clean up everything once we're done
 nav.Cleanup()
 GPIO.cleanup()
+
+while True:
+    print( "done" )
+
 
 print("Called Update() " + str(counter) + " times in " + str(duration) + " seconds.")
 print("For " + str(counter / (endTime - startTime)) + " updates per second.")

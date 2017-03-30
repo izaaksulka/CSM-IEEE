@@ -94,7 +94,7 @@ class Navigation:
         SetMotors( self.velocity, self.rotVelocity )
         ''' 
         GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(ON_PIN, GPIO.IN)        
+        GPIO.setup(ON_PIN, GPIO.IN, pull_up_down = GPIO.PUD_DOWN) 
 
 
         #Don't exit here until the on button is pressed
