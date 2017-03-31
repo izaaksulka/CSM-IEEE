@@ -119,7 +119,7 @@ void setup() {
   // to adjust white balance you can uncomment this line
   // and comment out the plasma_morph() in loop()
   // and then experiment with whiteBalVal above
-   ColorFill( 0, 0, 0 );
+   ColorFill( 255, 255, 0 );
   //plasma_morph();
 
   // Do the serial comms
