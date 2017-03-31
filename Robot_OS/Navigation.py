@@ -111,11 +111,12 @@ class Navigation:
             if self.curDirection == ROTATE_CCW or self.curDirection == ROTATE_CW:           
                 isRotating = True
             '''
-            dr, dAngle = self.feedback.Update(self.rotation, self.isRotating)
-            newPosX = self.position[0] + dr[0]
-            newPosY = self.position[1] + dr[1]
-            self.position = Vector( newPosX, newPosY )
-            self.rotation += dAngle
+            if self.moveState != PAUSED:
+                dr, dAngle = self.feedback.Update(self.rotation, self.isRotating)
+                newPosX = self.position[0] + dr[0]
+                newPosY = self.position[1] + dr[1]
+                self.position = Vector( newPosX, newPosY )
+                self.rotation += dAngle
         
 
             
