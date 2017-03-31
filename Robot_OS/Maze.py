@@ -56,21 +56,17 @@ class Maze:
         output = ""
         for i in range( self.width ):
             for j in range( self.height ):
-                output += "-1 %d %d %d\n" % (i, j, self.tiles[i][j].GetColor())
+                output += "-1 %d %d %d\n" % (j, i, self.tiles[i][j].GetColor())
                 #self.Output( i, j )
 
         #output += "\n"
         self.ser.write( output.encode( encoding = "ascii" ) )
 
 
-    def GetEnds(self):
+    def SetEnds(self):
         ends = self.Connect()
 
-        if len(ends) < 2:
-            print( "Oh god something's wrong.  there's less than 2 end points")
-            #do something to handle that there are not enough end points
-
-        elif len(ends) == 2:#meaning there's no corners here
+        if len(ends) <= 2:#meaning there's no corners here
             for end in ends:
                 end.SetState(WIRE) #2 is WIRE, trying importing from Tile at top
             PrintMap()
@@ -78,8 +74,6 @@ class Maze:
         else:#meaning that there are more than two ends, so there is a corner
             print("need to handle corners")
             #wait to set LED until gotten to the corner
-
-        return ends
 
     def Connect(self):
 

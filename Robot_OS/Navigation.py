@@ -5,11 +5,14 @@ from Vector import Vector
 from Drive import Drive
 import ACDetectorReader
 import Maze
+from sevenSegment import SevenSegment
+
 
 # External libraries
 from collections import deque
 from math import pi, cos, sin, copysign
 import time
+import RPi.GPIO as GPIO
 
 # SERIAL PORTS
 DRIVE_PORT = "/dev/ttyACM0"
@@ -20,11 +23,12 @@ MAP_PORT = "/dev/ttyUSB0"
 ENCODER_A = 15 
 ENCODER_B = 16
 AC_DETECTOR_PORT = 36
+ON_PIN = 11
 
 ''' Probably deprecated
 PAUSE_DURATION = 2.0 
 '''
-LINEAR_ERROR = 0.05
+LINEAR_ERROR = 0.1
 ROTATION_ERROR = 0.5
 
 SCAN_BOARD, OPEN_CACHE, RETURN_HOME = range(3)
@@ -59,6 +63,8 @@ class Navigation:
         #Initialize ACDetectorReader
         self.reader = ACDetectorReader.ACDetectorReader( AC_DETECTOR_PORT )
 
+        self.sevenSegment = SevenSegment()
+
         ##########################
         # INIZIALIZE ROBOT STATE #
         ##########################
@@ -72,6 +78,7 @@ class Navigation:
 
         self.targetPos = startPosition
         self.targetAngle = startRotation
+        self.startPause = time.time()
         self.targetTime = time.time()
     
         # The current algorithm the robot is running
@@ -83,9 +90,17 @@ class Navigation:
         self.counter = 0
         ''' I think all this is deprecated
         self.curDirection = RIGHT
-        self.curRow = 6 
-        self.drive.SetMotors( self.velocity, self.rotVelocity )
-        '''   
+        self.curRow = 6
+        SetMotors( self.velocity, self.rotVelocity )
+        ''' 
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(ON_PIN, GPIO.IN, pull_up_down = GPIO.PUD_DOWN) 
+
+
+        #Don't exit here until the on button is pressed
+        while not GPIO.input(ON_PIN) == GPIO.HIGH:
+            print( "", end = '')
+  
     def Update(self):
             
             # Update the hardware state
@@ -115,7 +130,10 @@ class Navigation:
                     self.NextCommand()
                     self.nextState = OPEN_CACHE
                 elif self.nextState == OPEN_CACHE:
+                    self.maze.SetEnds()
                     self.maze.PrintMap()
+                    self.sevenSegment.SetRandomNumber()
+                    print ("NOOOOOOOOOOOOOOOOOOOOOOOOOOOO")                    
                     # Set next state here
            # self.
             self.counter += 1      
@@ -123,7 +141,9 @@ class Navigation:
                 self.counter = 0
                 print("state: ", self.moveState) 
                 print("Position ", self.position,  " Cur Rotation: ", self.rotation, "MoveState: " , self.moveState )
-                print("target angle = ", self.targetAngle)
+               
+                print("target pos = ", self.targetPos)
+                 #print("target angle = ", self.targetAngle)
              # print( "Error: ", (self.position - self.targetPos).norm(), "Threshold: ", LINEAR_ERROR )
             #if(self.moveState == ROTATING):
             #    print("rotating")
@@ -138,6 +158,8 @@ class Navigation:
                 self.NextCommand()
             
 
+            if self.moveState == PAUSED and self.nextState == OPEN_CACHE and time.time() - self.startPause > 0.5:
+                self.maze.SendAcSensorData( self.position, self.reader.GetSensorValue() )
             # Tell the chassis what to do now that we've figure that out
             # where we're going
 
@@ -163,7 +185,7 @@ class Navigation:
 
     # Reads in and enqueues commands for scan board mode
     def ScanBoard(self):
-        fin = open( "./moveCommands.txt", 'r' )
+        fin = open( "/home/pi/Desktop/CSM-IEEE/Robot_OS/moveCommands.txt", 'r' )
         contents = fin.read()
         fin.close()
 
@@ -183,9 +205,11 @@ class Navigation:
         self.moveState = TRANSLATING
         self.isRotating = False
 
-        rotRad = ToRad( self.rotation )
-        self.targetPos = ( self.position[0] + distance *  cos( rotRad ),
-                           self.position[1] + distance * -sin( rotRad ) )
+        prevRotation = round(self.rotation / 45) * 45
+        rotRad = ToRad( prevRotation )
+
+        self.targetPos = ( self.targetPos[0] + distance *  cos( rotRad ),
+                           self.targetPos[1] + distance * -sin( rotRad ) )
 
         # TODO: Set the motors somewhere
 
@@ -197,6 +221,17 @@ class Navigation:
         self.moveState = PAUSED
         self.isRotating = False
         self.targetTime = time.time() + duration
+        
+        prevRotation = round(self.rotation / 45) * 45
+        rotRad = ToRad( prevRotation )
+
+        self.targetPos = ( self.targetPos[0] +  cos( rotRad ),
+                           self.targetPos[1] + -sin( rotRad ) )
+        
+        if self.position[0] > 3.5:
+            self.position = Vector( 6.5, self.position[1] )
+        else:
+            self.position = Vector( 0.5, self.position[1] )
 
     # Tells the robot to move a certain number of degrees
     def SetRotate(self, targetAngle):
@@ -213,6 +248,7 @@ class Navigation:
         self.rotVelocity = STOP_ROTATION
         self.moveState = PAUSED
         self.isRotating = False
+        self.startPause = time.time()
         self.targetTime = time.time() + duration
 
         # TODO: Set the motors somewhere
