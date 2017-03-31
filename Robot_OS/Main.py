@@ -4,7 +4,7 @@
 import RPi.GPIO as GPIO
 import Navigation
 import Vector
-
+from sevenSegment import SevenSegment
 import time
 
 #GPIO.cleanup()
@@ -30,7 +30,7 @@ GPIO.setmode(GPIO.BOARD)
 OFF_PIN = 37
 
 GPIO.setup(OFF_PIN, GPIO.IN, pull_up_down = GPIO.PUD_DOWN) 
-
+sevenSegment = SevenSegment()
 
 try:
     #Start main loop
@@ -61,6 +61,7 @@ except KeyboardInterrupt:
 # Clean up everything once we're done
 nav.Cleanup()
 GPIO.cleanup()
+sevenSegment.SetRandomNumber()
 
 while True:
     print( "done" )

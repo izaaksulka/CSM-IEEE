@@ -5,7 +5,7 @@ from Vector import Vector
 from Drive import Drive
 import ACDetectorReader
 import Maze
-from sevenSegment import SevenSegment
+#from sevenSegment import SevenSegment
 
 
 # External libraries
@@ -63,7 +63,7 @@ class Navigation:
         #Initialize ACDetectorReader
         self.reader = ACDetectorReader.ACDetectorReader( AC_DETECTOR_PORT )
 
-        self.sevenSegment = SevenSegment()
+        #self.sevenSegment = SevenSegment()
 
         ##########################
         # INIZIALIZE ROBOT STATE #
@@ -133,7 +133,7 @@ class Navigation:
                 elif self.nextState == OPEN_CACHE:
                     self.maze.SetEnds()
                     self.maze.PrintMap()
-                    self.sevenSegment.SetRandomNumber()
+                    #self.sevenSegment.SetRandomNumber()
                     print ("NOOOOOOOOOOOOOOOOOOOOOOOOOOOO")                    
                     # Set next state here
            # self.
