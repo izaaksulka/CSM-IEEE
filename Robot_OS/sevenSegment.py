@@ -3,7 +3,7 @@ from random import randrange
 from time import sleep
 
 #PORTS =[ 21,24,26,29,31,23,22 ]
-PORTS =[ 23,22,21,24,26,29,31 ]
+PORTS =[ 23,22,21,24,29,26,31 ]
 
 
 NUMBERS = [ "0110000","1101101","1111001", "0110011", "1011011", "1011111" ]
@@ -36,10 +36,8 @@ class SevenSegment:
             else:
                 GPIO.output(PORTS[i], GPIO.LOW)
             
-
 '''
 sevenSegment = SevenSegment()
-
 
 for k in range(10):
     for port in PORTS:
@@ -47,7 +45,6 @@ for k in range(10):
         print (port)
         sleep(0.5)
         GPIO.output(port, GPIO.LOW)
-
 sevenSegment.SetRandomNumber()
 input( "cake?" )
 GPIO.cleanup()
