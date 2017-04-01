@@ -60,13 +60,12 @@ except KeyboardInterrupt:
 
 # Clean up everything once we're done
 nav.Cleanup()
-GPIO.cleanup()
 sevenSegment.SetRandomNumber()
 
 while True:
     print( "done" )
 
-
+GPIO.cleanup()
 print("Called Update() " + str(counter) + " times in " + str(duration) + " seconds.")
 print("For " + str(counter / (endTime - startTime)) + " updates per second.")
 print("\nFinish")
